@@ -1,0 +1,53 @@
+using System;
+using System.Collections.Generic;
+
+namespace TradingSimulator.Core.Models
+{
+    public class Stock
+    {
+        public string Symbol { get; }
+        public string Name { get; }
+
+        private decimal price;
+        public decimal Price
+        {
+            get => price;
+            private set
+            {
+                if (value <= 0)
+                    throw new ArgumentException("Price must be greater than 0");
+
+                price = value;
+                PriceHistory.Add(value);
+            }
+        }
+
+        public List<decimal> PriceHistory { get; }
+
+        public Stock(string symbol, string name, decimal initialPrice)
+        {
+            if (string.IsNullOrWhiteSpace(symbol))
+                throw new ArgumentException("Symbol cannot be empty");
+
+            if (initialPrice <= 0)
+                throw new ArgumentException("Initial price must be greater than 0");
+
+            Symbol = symbol.ToUpper();
+            Name = name;
+            PriceHistory = new List<decimal>();
+
+            Price = initialPrice;
+        }
+
+        public void UpdatePrice(decimal percentageChange)
+        {
+            decimal newPrice = Price + Price * percentageChange;
+            Price = Math.Max(newPrice, 0.01m); // We assume that stock cannot fall below 0.01$
+        }
+
+        public override string ToString()
+        {
+            return $"{Symbol} - {Price:c}";
+        }
+    }
+}
