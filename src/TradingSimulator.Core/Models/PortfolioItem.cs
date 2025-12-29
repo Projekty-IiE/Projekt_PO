@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace TradingSimulator.Core.Models
 {
+    /// <summary>
+    /// Represents a portfolio item. Portfolio consists of given portfolio items. 
+    /// Portfolio item stores a given stock info (Stock object and Quantity of this stock).
+    /// </summary>
     public class PortfolioItem
     {
         public Stock Stock { get; }
         public int Quantity { get; private set; }
-
         public decimal TotalValue => Stock.Price * Quantity;
 
         public PortfolioItem(Stock stock, int quantity)

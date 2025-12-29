@@ -3,10 +3,14 @@ using System.Collections.Generic;
 
 namespace TradingSimulator.Core.Models
 {
+    /// <summary>
+    /// Represents a certain Stock. Class methods allow to manipulate
+    /// price of the stock. Contains price history as a list.
+    /// </summary>
     public class Stock
     {
-        public string Symbol { get; }
-        public string Name { get; }
+        public string Symbol { get; } // Ticker ex.: "NVDA"
+        public string Name { get; } // Full name ex.: "NVIDIA Corporation"
 
         private decimal price;
         public decimal Price
