@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TradingSimulator.Core.Exceptions;
 
 namespace TradingSimulator.Core.Models
 {
     /// <summary>
     /// Represents an investment portfolio that manages cash balance
-    /// and current stock positions, and creates transactions
-    /// during buy and sell operations.
+    /// and current stock positions.
     /// </summary>
     public class Portfolio
     {
@@ -64,6 +61,7 @@ namespace TradingSimulator.Core.Models
                     items.Remove(item);
             }
         }
+
         public void BuyStock(Stock stock, int quantity)
         {
             if (stock == null)
@@ -80,6 +78,28 @@ namespace TradingSimulator.Core.Models
             UpdateCash(-totalCost);
             UpdateHoldings(stock, quantity);
         }
+        public void SellStock(Stock stock, int quantity)
+        {
+            if (stock == null)
+                throw new ArgumentNullException(nameof(stock));
+
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than 0");
+
+            var item = items.FirstOrDefault(i => i.Stock.Symbol == stock.Symbol);
+
+            if (item == null)
+                throw new InsufficientSharesException(quantity, 0);
+
+            if (item.Quantity < quantity)
+                throw new InsufficientSharesException(quantity, item.Quantity);
+
+            decimal totalValue = stock.Price * quantity;
+
+            UpdateHoldings(stock, -quantity);
+            UpdateCash(totalValue);
+        }
+
 
     }
 }
