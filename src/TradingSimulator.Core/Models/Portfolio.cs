@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TradingSimulator.Core.Enums;
 using TradingSimulator.Core.Exceptions;
 
 namespace TradingSimulator.Core.Models
@@ -11,8 +12,8 @@ namespace TradingSimulator.Core.Models
     /// </summary>
     public class Portfolio
     {
-        decimal balance;
-        readonly List<PortfolioItem> items;
+        private decimal balance;
+        private readonly List<PortfolioItem> items;
 
         public decimal Balance => balance;
         public IReadOnlyList<PortfolioItem> Items => items;
@@ -28,7 +29,62 @@ namespace TradingSimulator.Core.Models
             items = new();
         }
 
-        public void UpdateCash(decimal amount)
+        public Transaction BuyStock(Stock stock, int quantity)
+        {
+            if (stock == null)
+                throw new ArgumentNullException(nameof(stock));
+
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than 0");
+
+            decimal totalCost = stock.Price * quantity;
+
+            if (balance < totalCost)
+                throw new InsufficientFundsException(totalCost, balance);
+
+            UpdateCash(-totalCost);
+            UpdateHoldings(stock, quantity);
+
+            return new Transaction(
+                EnumTransacitonType.Buy,
+                stock.Symbol,
+                quantity,
+                stock.Price
+            );
+        }
+
+        public Transaction SellStock(Stock stock, int quantity)
+        {
+            if (stock == null)
+                throw new ArgumentNullException(nameof(stock));
+
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than 0");
+
+            var item = items.FirstOrDefault(i => i.Stock.Symbol == stock.Symbol);
+
+            if (item == null)
+                throw new InsufficientSharesException(quantity, 0);
+
+            if (item.Quantity < quantity)
+                throw new InsufficientSharesException(quantity, item.Quantity);
+
+            decimal totalValue = stock.Price * quantity;
+
+            UpdateHoldings(stock, -quantity);
+            UpdateCash(totalValue);
+
+            return new Transaction(
+                EnumTransacitonType.Sell,
+                stock.Symbol,
+                quantity,
+                stock.Price
+            );
+        }
+
+        // ===== PRIVATE HELPERS =====
+
+        private void UpdateCash(decimal amount)
         {
             if (balance + amount < 0)
                 throw new ArgumentException("Balance cannot be negative.");
@@ -36,11 +92,8 @@ namespace TradingSimulator.Core.Models
             balance += amount;
         }
 
-        public void UpdateHoldings(Stock stock, int quantity)
+        private void UpdateHoldings(Stock stock, int quantity)
         {
-            if (stock == null)
-                throw new ArgumentNullException(nameof(stock));
-
             var item = items.FirstOrDefault(i => i.Stock.Symbol == stock.Symbol);
 
             if (item == null)
@@ -61,45 +114,5 @@ namespace TradingSimulator.Core.Models
                     items.Remove(item);
             }
         }
-
-        public void BuyStock(Stock stock, int quantity)
-        {
-            if (stock == null)
-                throw new ArgumentNullException(nameof(stock));
-
-            if (quantity <= 0)
-                throw new ArgumentException("Quantity must be greater than 0");
-
-            decimal totalCost = stock.Price * quantity;
-
-            if (balance < totalCost)
-                throw new InsufficientFundsException(totalCost, balance);
-
-            UpdateCash(-totalCost);
-            UpdateHoldings(stock, quantity);
-        }
-        public void SellStock(Stock stock, int quantity)
-        {
-            if (stock == null)
-                throw new ArgumentNullException(nameof(stock));
-
-            if (quantity <= 0)
-                throw new ArgumentException("Quantity must be greater than 0");
-
-            var item = items.FirstOrDefault(i => i.Stock.Symbol == stock.Symbol);
-
-            if (item == null)
-                throw new InsufficientSharesException(quantity, 0);
-
-            if (item.Quantity < quantity)
-                throw new InsufficientSharesException(quantity, item.Quantity);
-
-            decimal totalValue = stock.Price * quantity;
-
-            UpdateHoldings(stock, -quantity);
-            UpdateCash(totalValue);
-        }
-
-
     }
 }
