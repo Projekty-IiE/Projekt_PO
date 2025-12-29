@@ -1,10 +1,40 @@
-﻿using TradingSimulator.Core.Models;
+﻿using System;
+using TradingSimulator.Core.Models;
+using TradingSimulator.Core.Enums;
 
-// Stock debug
-Stock stock = new Stock("AAPL", "Apple Inc.", 0.5m);
+class Program
+{
+    static void Main()
+    {
+        // === CREATE BUY TRANSACTION ===
+        var buyTransaction = new Transaction(
+            EnumTransacitonType.Buy,
+            "AAPL",
+            10,
+            150.50m
+        );
 
-//Portfolio Item debug
+        // === CREATE SELL TRANSACTION WITH CUSTOM TIME ===
+        var sellTransaction = new Transaction(
+            EnumTransacitonType.Sell,
+            "TSLA",
+            5,
+            200.00m,
+            new DateTime(2025, 1, 10, 14, 30, 0)
+        );
 
-var item = new PortfolioItem(stock, 100);
+        // === OUTPUT ===
+        PrintTransaction(buyTransaction);
+        Console.WriteLine();
+        PrintTransaction(sellTransaction);
 
-stock.UpdatePrice(1m); // +100%
+        // === DEBUG POINT ===
+        Console.WriteLine("\nPress ENTER to exit...");
+        Console.ReadLine();
+    }
+
+    static void PrintTransaction(Transaction tx)
+    {
+        Console.WriteLine(tx);
+    }
+}
