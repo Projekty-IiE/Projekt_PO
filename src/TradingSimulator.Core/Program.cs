@@ -13,7 +13,7 @@ class Program
             10,
             150.50m
         );
-        Console.WriteLine();
+
         // === CREATE SELL TRANSACTION WITH CUSTOM TIME ===
         var sellTransaction = new Transaction(
             EnumTransacitonType.Sell,
