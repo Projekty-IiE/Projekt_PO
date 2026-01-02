@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TradingSimulator.Core.Models;
 
-namespace TradingSimulator.WPF
+namespace TradingSimulator.WPF.Views
 {
     /// <summary>
     /// Logika interakcji dla klasy Window1.xaml
