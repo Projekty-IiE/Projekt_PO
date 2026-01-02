@@ -34,14 +34,13 @@ namespace TradingSimulator.WPF.ViewModels
         private string _symbolToBuy = string.Empty;
 
         [ObservableProperty]
-        private int _quantityToBuy; 
+        private int _quantityToBuy;
 
         public MainViewModel(IMarketService marketService, IPortfolioService portfolioService)
         {
             _marketService = marketService;
             _portfolioService = portfolioService;
-
-            // test
+    //test -poczatkowe akcje
             try
             {
                 _portfolioService.Buy("AAPL", 5);
@@ -51,6 +50,7 @@ namespace TradingSimulator.WPF.ViewModels
 
             RefreshData();
         }
+
         [RelayCommand]
         private void BuyStock()
         {
@@ -82,6 +82,39 @@ namespace TradingSimulator.WPF.ViewModels
                 StatusMessage = $"Transaction Failed: {ex.Message}";
             }
         }
+
+        [RelayCommand]
+        private void SellStock()
+        {
+            if (string.IsNullOrWhiteSpace(SymbolToBuy))
+            {
+                StatusMessage = "Error: Please enter a stock symbol to sell.";
+                return;
+            }
+
+            if (QuantityToBuy <= 0)
+            {
+                StatusMessage = "Error: Quantity must be greater than 0.";
+                return;
+            }
+
+            try
+            {
+                var transaction = _portfolioService.Sell(SymbolToBuy, QuantityToBuy);
+
+                StatusMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
+
+                RefreshData();
+
+                SymbolToBuy = string.Empty;
+                QuantityToBuy = 0;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"SELL FAILED: {ex.Message}";
+            }
+        }
+
         private void RefreshData()
         {
             Balance = _portfolioService.Balance;
@@ -90,7 +123,7 @@ namespace TradingSimulator.WPF.ViewModels
             int stocksCount = _marketService.Stocks.Count;
 
             StatusMessage = $"Data Refreshed. Cash: {Balance:C} " +
-                $"| Stocks' Value: {TotalValue-Balance:C} " +
+                $"| Stocks' Value: {TotalValue - Balance:C} " +
                 $"| Portfolio's Value: {TotalValue:C} " +
                 $"| Market Stocks: {stocksCount}";
 
