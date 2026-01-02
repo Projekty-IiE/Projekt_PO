@@ -18,20 +18,30 @@ namespace TradingSimulator.WPF.ViewModels
 
         [ObservableProperty]
         private string _statusMessage = "Loading...";
+
+        [ObservableProperty]
+        private decimal _balance;
+
+        [ObservableProperty]
+        private decimal _totalValue;
+
         public MainViewModel(IMarketService marketService, IPortfolioService portfolioService)
         {
             _marketService = marketService;
             _portfolioService = portfolioService;
 
-            LoadInitialStatus();
+            RefreshData();
         }
-        private void LoadInitialStatus()
+        private void RefreshData()
         {
-            decimal currentCash = _portfolioService.Balance;
+            Balance = _portfolioService.Balance;
+            TotalValue = _portfolioService.TotalValue;
 
             int stocksCount = _marketService.Stocks.Count;
 
-            StatusMessage = $"System Ready. Cash: {currentCash:C} | Market Stocks: {stocksCount}";
+            StatusMessage = $"Data Refreshed. Cash: {Balance:C} " +
+                $"| Portfolio's Value: {TotalValue:C} " +
+                $"| Market Stocks: {stocksCount}";
         }
     }
 }
