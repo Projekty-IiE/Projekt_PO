@@ -31,9 +31,10 @@
                                     FontWeight="Bold"/>
 
                 <DataGridTextColumn Header="Name" 
-                    Binding="{Binding Stock.Name}" 
-                    Width="80" 
-                    FontWeight="Bold"/>
+                                    Binding="{Binding Stock.Name}" 
+                                    Width="120" 
+                                    FontWeight="SemiBold"
+                                    Foreground="Gray"/>
 
                 <DataGridTextColumn Header="Quantity" 
                                     Binding="{Binding Quantity}" 
@@ -45,7 +46,9 @@
 
                 <DataGridTextColumn Header="Total Value" 
                                     Binding="{Binding TotalValue, StringFormat=C2}" 
-                                    Width="*"/>
+                                    Width="*" 
+                                    FontWeight="Bold"
+                                    Foreground="Green"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

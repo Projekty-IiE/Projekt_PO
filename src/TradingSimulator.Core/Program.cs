@@ -51,7 +51,7 @@ class Program
         for (int i = 1; i <= 5; i++)
         {
             Console.WriteLine($"\n=== TICK {i} ===");
-            market.Tick(); //generating price changes
+            market.UpdateMarket(); //generating price changes
             PrintPrices(market);
 
             System.Threading.Thread.Sleep(1000); // pause for readability

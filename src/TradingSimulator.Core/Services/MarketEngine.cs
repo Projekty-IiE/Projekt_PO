@@ -5,10 +5,6 @@ using TradingSimulator.Core.Models;
 
 namespace TradingSimulator.Core.Services
 {
-    /// <summary>
-    /// Simulates market fluidity by periodically changing stock prices.
-    /// </summary>
-    
     public class MarketEngine : IMarketService
     {
         private readonly Random random = new();
@@ -18,22 +14,25 @@ namespace TradingSimulator.Core.Services
 
         public MarketEngine(IEnumerable<Stock> stocks)
         {
-            if(stocks == null) { throw new ArgumentNullException(nameof(stocks)); }
+            if (stocks == null) { throw new ArgumentNullException(nameof(stocks)); }
 
-            this.stocks= new List<Stock>(stocks);
+            this.stocks = new List<Stock>(stocks);
         }
 
         private decimal GetChange()
         {
-            return (decimal)(random.NextDouble() *0.1-0.05); //from -0.05 to 0.05
+            // Zmiana od -2% do +2%
+            return (decimal)(random.NextDouble() * 0.04 - 0.02);
         }
-        
-        public void Tick()
+
+        public void UpdateMarket()
         {
             foreach (var stock in stocks)
             {
-                decimal change = GetChange();
-                stock.UpdatePrice(change);
+
+                decimal changePercent = GetChange();
+
+                stock.UpdatePrice(changePercent);
             }
         }
     }
