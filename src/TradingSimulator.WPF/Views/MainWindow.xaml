@@ -47,13 +47,25 @@
                          Padding="5" 
                          Margin="0,5,0,20"/>
 
-                <Button Content="BUY SHARES" 
-                        Command="{Binding BuyStockCommand}"
-                        Height="40"
-                        Background="#2E8B57"
-                        Foreground="White"
-                        FontWeight="Bold"
-                        Cursor="Hand"/>
+                <UniformGrid Columns="2">
+                    <Button Content="BUY" 
+                            Command="{Binding BuyStockCommand}"
+                            Height="40"
+                            Background="#2E8B57"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Cursor="Hand"
+                            Margin="0,0,5,0"/>
+
+                    <Button Content="SELL" 
+                            Command="{Binding SellStockCommand}"
+                            Height="40"
+                            Background="#D32F2F"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Cursor="Hand"
+                            Margin="5,0,0,0"/>
+                </UniformGrid>
 
                 <TextBlock Text="Available: AAPL, GOOGL, MSFT, TSLA, PLTR" 
                            Margin="0,30,0,0" 
