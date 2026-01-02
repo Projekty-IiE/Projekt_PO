@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
 
 namespace TradingSimulator.Core.Services
@@ -8,7 +9,7 @@ namespace TradingSimulator.Core.Services
     /// Simulates market fluidity by periodically changing stock prices.
     /// </summary>
     
-    public class MarketEngine
+    public class MarketEngine : IMarketService
     {
         private readonly Random random = new();
         private readonly List<Stock> stocks;

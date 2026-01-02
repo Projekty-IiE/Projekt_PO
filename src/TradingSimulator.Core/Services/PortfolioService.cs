@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
 
 namespace TradingSimulator.Core.Services
 {
-    public class PortfolioService
+    public class PortfolioService : IPortfolioService
     {
         private readonly Portfolio portfolio;
-        private readonly MarketEngine marketEngine;
+        private readonly IMarketService marketService;
+        public decimal Balance => portfolio.Balance;
+        public decimal TotalValue => portfolio.TotalValue;
+        public IReadOnlyList<PortfolioItem> Items => portfolio.Items;
 
-        public PortfolioService(Portfolio portfolio, MarketEngine marketEngine)
+        public PortfolioService(Portfolio portfolio, IMarketService marketService)
         {
             this.portfolio = portfolio ?? throw new ArgumentNullException(nameof(portfolio));
-            this.marketEngine = marketEngine ?? throw new ArgumentNullException(nameof(marketEngine));
+            this.marketService = marketService ?? throw new ArgumentNullException(nameof(marketService));
         }
 
         public Transaction Buy(string symbol, int quantity)
@@ -35,7 +39,7 @@ namespace TradingSimulator.Core.Services
             if (string.IsNullOrWhiteSpace(symbol))
                 throw new ArgumentException("Symbol cannot be empty.");
 
-            var stock = marketEngine.Stocks
+            var stock = marketService.Stocks
                 .FirstOrDefault(s => s.Symbol == symbol.ToUpper());
 
             if (stock == null)

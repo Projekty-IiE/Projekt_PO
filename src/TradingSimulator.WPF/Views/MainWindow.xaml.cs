@@ -12,19 +12,20 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TradingSimulator.Core.Models;
+using TradingSimulator.WPF.ViewModels;
 
 namespace TradingSimulator.WPF.Views
 {
     /// <summary>
-    /// Logika interakcji dla klasy Window1.xaml
+    /// Logika interakcji dla klasy MainWindow.xaml
     /// </summary>
-    public partial class Window1 : Window
+    public partial class MainWindow : Window
     {
-        public Window1()
+        public MainWindow(MainViewModel viewModel)
         {
             InitializeComponent();
-            var stock = new Stock("AAPL", "Apple", 10);
-            Console.WriteLine(stock);
+            
+            DataContext = viewModel;
         }
     }
 }
