@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using TradingSimulator.Core.Interfaces;
-using System.Collections.ObjectModel;
 using TradingSimulator.Core.Models;
 
 namespace TradingSimulator.WPF.ViewModels
@@ -29,6 +30,12 @@ namespace TradingSimulator.WPF.ViewModels
 
         public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
 
+        [ObservableProperty]
+        private string _symbolToBuy = string.Empty;
+
+        [ObservableProperty]
+        private int _quantityToBuy; 
+
         public MainViewModel(IMarketService marketService, IPortfolioService portfolioService)
         {
             _marketService = marketService;
@@ -43,6 +50,37 @@ namespace TradingSimulator.WPF.ViewModels
             catch { }
 
             RefreshData();
+        }
+        [RelayCommand]
+        private void BuyStock()
+        {
+            if (string.IsNullOrWhiteSpace(SymbolToBuy))
+            {
+                StatusMessage = "Error: Please enter a stock symbol.";
+                return;
+            }
+
+            if (QuantityToBuy <= 0)
+            {
+                StatusMessage = "Error: Quantity must be greater than 0.";
+                return;
+            }
+
+            try
+            {
+                var transaction = _portfolioService.Buy(SymbolToBuy, QuantityToBuy);
+
+                StatusMessage = $"Success! Bought {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
+
+                RefreshData();
+
+                SymbolToBuy = string.Empty;
+                QuantityToBuy = 0;
+            }
+            catch (Exception ex)
+            {
+                StatusMessage = $"Transaction Failed: {ex.Message}";
+            }
         }
         private void RefreshData()
         {
