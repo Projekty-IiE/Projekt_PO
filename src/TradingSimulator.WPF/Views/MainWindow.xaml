@@ -3,21 +3,78 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:TradingSimulator.WPF"
+        xmlns:views="clr-namespace:TradingSimulator.WPF.Views" 
+        
         mc:Ignorable="d"
-        xmlns:views="clr-namespace:TradingSimulator.WPF.Views"
-        Title="MainWindow" Height="450" Width="800">
+        Title="{Binding Title}" 
+        Height="450" Width="800">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <views:PortfolioView Grid.Row="0" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="250" />
+        </Grid.ColumnDefinitions>
 
-        <StatusBar Grid.Row="1">
+        <views:PortfolioView Grid.Row="0" Grid.Column="0" />
+
+        <Border Grid.Row="0" Grid.Column="1" 
+                Background="#F5F5F5" 
+                BorderBrush="#DDDDDD" 
+                BorderThickness="1,0,0,0" 
+                Padding="15">
+
+            <StackPanel>
+                <TextBlock Text="Place Order" 
+                           FontSize="18" 
+                           FontWeight="Bold" 
+                           Margin="0,0,0,20"
+                           Foreground="#333"/>
+
+                <TextBlock Text="Stock Symbol:" FontWeight="SemiBold"/>
+                <TextBox Text="{Binding SymbolToBuy, UpdateSourceTrigger=PropertyChanged}" 
+                         Padding="5" 
+                         Margin="0,5,0,15"
+                         CharacterCasing="Upper"
+                         ToolTip="Example: AAPL, TSLA, MSFT"/>
+
+                <TextBlock Text="Quantity:" FontWeight="SemiBold"/>
+                <TextBox Text="{Binding QuantityToBuy, UpdateSourceTrigger=PropertyChanged}" 
+                         Padding="5" 
+                         Margin="0,5,0,20"/>
+
+                <Button Content="BUY SHARES" 
+                        Command="{Binding BuyStockCommand}"
+                        Height="40"
+                        Background="#2E8B57"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        Cursor="Hand"/>
+
+                <TextBlock Text="Available: AAPL, GOOGL, MSFT, TSLA, PLTR" 
+                           Margin="0,30,0,0" 
+                           FontSize="11" 
+                           Foreground="Gray" 
+                           TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="2" Background="#EEEEEE" Padding="5">
             <StatusBarItem>
-                <TextBlock Text="{Binding StatusMessage}" FontWeight="Bold"/>
+                <TextBlock Text="{Binding StatusMessage}" 
+                           FontWeight="Bold" 
+                           Foreground="#333"/>
+            </StatusBarItem>
+
+            <StatusBarItem HorizontalAlignment="Right">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Cash: "/>
+                    <TextBlock Text="{Binding Balance, StringFormat=C2}" FontWeight="Bold" Foreground="Green"/>
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
     </Grid>
