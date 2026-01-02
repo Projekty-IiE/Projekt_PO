@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TradingSimulator.Core.Enums;
 using TradingSimulator.Core.Exceptions;
+using TradingSimulator.Core.Interfaces;
 
 namespace TradingSimulator.Core.Models
 {
