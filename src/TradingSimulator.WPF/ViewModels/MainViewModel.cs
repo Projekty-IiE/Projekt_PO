@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
+using System.Windows.Threading;
 
 namespace TradingSimulator.WPF.ViewModels
 {
@@ -15,6 +16,7 @@ namespace TradingSimulator.WPF.ViewModels
     {
         private readonly IMarketService _marketService;
         private readonly IPortfolioService _portfolioService;
+        private readonly DispatcherTimer _timer;
 
         [ObservableProperty]
         private string _title = "Mini Trading Simulator";
@@ -28,6 +30,10 @@ namespace TradingSimulator.WPF.ViewModels
         [ObservableProperty]
         private decimal _totalValue;
 
+
+        [ObservableProperty]
+        private string _autoTickButtonText = "START AUTO-TICK";
+
         public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
 
         [ObservableProperty]
@@ -40,7 +46,12 @@ namespace TradingSimulator.WPF.ViewModels
         {
             _marketService = marketService;
             _portfolioService = portfolioService;
-    //test -poczatkowe akcje
+
+            _timer = new DispatcherTimer();
+            _timer.Interval = TimeSpan.FromSeconds(1);
+            _timer.Tick += (s, e) => NextTick();
+
+            // Testowe dane
             try
             {
                 _portfolioService.Buy("AAPL", 5);
@@ -49,6 +60,38 @@ namespace TradingSimulator.WPF.ViewModels
             catch { }
 
             RefreshData();
+        }
+
+        [RelayCommand]
+        private void NextTick()
+        {
+            _marketService.UpdateMarket();
+            RefreshData();
+
+            if (!_timer.IsEnabled)
+            {
+                // Opcjonalne: można tu zaktualizować status przy ręcznym kliknięciu
+            }
+        }
+
+
+        [RelayCommand]
+        private void ToggleAutoTick()
+        {
+            if (_timer.IsEnabled)
+            {
+
+                _timer.Stop();
+                AutoTickButtonText = "START AUTO-TICK"; 
+                StatusMessage = "Simulation Paused.";
+            }
+            else
+            {
+
+                _timer.Start();
+                AutoTickButtonText = "STOP AUTO-TICK";  
+                StatusMessage = "Simulation Running...";
+            }
         }
 
         [RelayCommand]
@@ -69,11 +112,8 @@ namespace TradingSimulator.WPF.ViewModels
             try
             {
                 var transaction = _portfolioService.Buy(SymbolToBuy, QuantityToBuy);
-
                 StatusMessage = $"Success! Bought {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
-
                 RefreshData();
-
                 SymbolToBuy = string.Empty;
                 QuantityToBuy = 0;
             }
@@ -101,11 +141,8 @@ namespace TradingSimulator.WPF.ViewModels
             try
             {
                 var transaction = _portfolioService.Sell(SymbolToBuy, QuantityToBuy);
-
                 StatusMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
-
                 RefreshData();
-
                 SymbolToBuy = string.Empty;
                 QuantityToBuy = 0;
             }
@@ -119,13 +156,9 @@ namespace TradingSimulator.WPF.ViewModels
         {
             Balance = _portfolioService.Balance;
             TotalValue = _portfolioService.TotalValue;
-
             int stocksCount = _marketService.Stocks.Count;
 
-            StatusMessage = $"Data Refreshed. Cash: {Balance:C} " +
-                $"| Stocks' Value: {TotalValue - Balance:C} " +
-                $"| Portfolio's Value: {TotalValue:C} " +
-                $"| Market Stocks: {stocksCount}";
+            StatusMessage = $"Data Refreshed. Cash: {Balance:C} | Portfolio Value: {TotalValue:C}";
 
             PortfolioItems.Clear();
             foreach (var item in _portfolioService.Items)
