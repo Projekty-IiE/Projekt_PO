@@ -25,12 +25,7 @@ namespace TradingSimulator.WPF.Views
         {
             InitializeComponent();
             
-            DataContext = viewModel;
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
+            DataContext = viewModel; // Set DataContext to MainViewModel
         }
     }
 }
