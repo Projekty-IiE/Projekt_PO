@@ -25,7 +25,7 @@ public partial class App : Application
     {
         var services = new ServiceCollection();
 
-        services.AddSingleton<IMarketService>(provider =>
+        services.AddSingleton<IMarketService>(provider => //When someone asks for IMarketService return MarketEngine object.
         {
             var initialStocks = new List<Stock>
                 {

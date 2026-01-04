@@ -22,7 +22,7 @@ namespace TradingSimulator.WPF.Views
     {
         public PortfolioView()
         {
-            InitializeComponent();
+            InitializeComponent(); // Inherits DataContext from MainWindow
         }
     }
 }

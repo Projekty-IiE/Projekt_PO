@@ -35,11 +35,11 @@
                            Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
                 <TextBlock Text="Stock Symbol:" FontWeight="SemiBold" Margin="0,5,0,0"/>
-                <TextBox Text="{Binding SymbolToBuy, UpdateSourceTrigger=PropertyChanged}" 
+                <TextBox Text="{Binding SymbolInput, UpdateSourceTrigger=PropertyChanged}" 
                          Padding="8" Margin="0,5,0,15" CharacterCasing="Upper" FontSize="14"/>
 
                 <TextBlock Text="Quantity:" FontWeight="SemiBold"/>
-                <TextBox Text="{Binding QuantityToBuy, UpdateSourceTrigger=PropertyChanged}" 
+                <TextBox Text="{Binding QuantityInput, UpdateSourceTrigger=PropertyChanged}" 
                          Padding="8" Margin="0,5,0,20" FontSize="14"/>
 
                 <UniformGrid Columns="2" Margin="0,0,0,10">
