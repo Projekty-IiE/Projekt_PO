@@ -34,6 +34,7 @@ namespace TradingSimulator.WPF.ViewModels
         private string _autoTickButtonText = "START AUTO-TICK";
 
         public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
+        public ObservableCollection<Transaction> Transactions { get; } = new();
 
         [ObservableProperty]
         private string _symbolInput = string.Empty;
@@ -111,6 +112,7 @@ namespace TradingSimulator.WPF.ViewModels
             try
             {
                 var transaction = _portfolioService.Buy(SymbolInput, QuantityInput);
+                Transactions.Insert(0, transaction);
                 StatusMessage = $"Success! Bought {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
                 RefreshData();
                 SymbolInput = string.Empty;
@@ -140,6 +142,7 @@ namespace TradingSimulator.WPF.ViewModels
             try
             {
                 var transaction = _portfolioService.Sell(SymbolInput, QuantityInput);
+                Transactions.Insert(0, transaction);
                 StatusMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
                 RefreshData();
                 SymbolInput = string.Empty;
