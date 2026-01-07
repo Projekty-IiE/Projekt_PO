@@ -102,12 +102,12 @@ namespace TradingSimulator.Core.Models
                 if (quantity <= 0)
                     throw new InvalidOperationException("Cannot remove stock that is not owned.");
 
-                items.Add(new PortfolioItem(stock, quantity));
+                items.Add(new PortfolioItem(stock, quantity, stock.Price));
             }
             else
             {
                 if (quantity > 0)
-                    item.Add(quantity);
+                    item.Add(quantity, stock.Price);
                 else
                     item.Remove(Math.Abs(quantity));
 
