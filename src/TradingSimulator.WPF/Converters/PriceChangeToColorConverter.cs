@@ -15,8 +15,8 @@ namespace TradingSimulator.WPF.Converters
         {
             if(value is decimal change)
             {
-                if (change < 0) return Brushes.Green;
-                if (change > 0) return Brushes.Red;
+                if (change > 0) return Brushes.Green;
+                if (change < 0) return Brushes.Red;
             }
             return Brushes.Black;
         }
