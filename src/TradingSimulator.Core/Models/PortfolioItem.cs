@@ -36,7 +36,7 @@ namespace TradingSimulator.Core.Models
                 throw new ArgumentException("Amount must be greater than 0");
 
             Quantity += amount;
-            AverageCost = (AverageCost * Quantity + purchasePrice * amount) / Quantity;
+            AverageCost = (AverageCost * (Quantity-amount) + purchasePrice * amount) / Quantity;
         }
 
         public void Remove(int amount)

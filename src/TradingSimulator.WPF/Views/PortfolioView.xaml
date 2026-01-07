@@ -57,6 +57,19 @@
                     </Style>                    
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
+                
+                <DataGridTextColumn Header="Profit/Loss" 
+                    Binding="{Binding UnrealizedPnL, StringFormat={}{0:C2}}" 
+                    Width="100"
+                    FontWeight="Bold">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" 
+                    Value="{Binding UnrealizedPnL, Converter={StaticResource PriceColorConverter}}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                
                 <DataGridTextColumn Header="Total Value" 
                                     Binding="{Binding TotalValue, StringFormat=C2}" 
                                     Width="*" 
