@@ -15,9 +15,6 @@ namespace TradingSimulator.WPF.ViewModels
         private readonly IPortfolioService _portfolioService;
         private DispatcherTimer _timer;
 
-        /// <summary>
-        /// Każde pole oznaczone [ObservableProperty] community toolkit automatycznie generuje PUBLICZNĄ właściwość z INotifyPropertyChanged.
-        /// </summary>
         [ObservableProperty]
         private string _title = "Mini Trading Simulator";
 
@@ -25,7 +22,7 @@ namespace TradingSimulator.WPF.ViewModels
         private string _statusMessage = "Loading...";
 
         [ObservableProperty]
-        private string _transactionMessage; //so that it can display without obstructing statusMessages
+        private string _transactionMessage;
 
         [ObservableProperty]
         private decimal _balance;
@@ -39,6 +36,9 @@ namespace TradingSimulator.WPF.ViewModels
         public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
         public ObservableCollection<Transaction> Transactions { get; } = new();
 
+        // --- ZMIANA 1: Lista dostępnych akcji dla Dropdowna ---
+        public ObservableCollection<Stock> AvailableStocks { get; } = new();
+
         [ObservableProperty]
         private string _symbolInput = string.Empty;
 
@@ -49,6 +49,12 @@ namespace TradingSimulator.WPF.ViewModels
         {
             _marketService = marketService;
             _portfolioService = portfolioService;
+
+            // --- ZMIANA 2: Załadowanie listy akcji z serwisu do listy w ViewModelu ---
+            foreach (var stock in _marketService.Stocks)
+            {
+                AvailableStocks.Add(stock);
+            }
 
             InitializeTimer();
             SeedDemoData();
@@ -67,8 +73,12 @@ namespace TradingSimulator.WPF.ViewModels
 
         private void SeedDemoData()
         {
-            _portfolioService.Buy("AAPL", 5);
-            _portfolioService.Buy("TSLA", 2);
+            try
+            {
+                _portfolioService.Buy("AAPL", 5);
+                _portfolioService.Buy("TSLA", 2);
+            }
+            catch { }
         }
 
         [RelayCommand]
@@ -102,7 +112,7 @@ namespace TradingSimulator.WPF.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SymbolInput))
             {
-                TransactionMessage = "Error: Please enter a stock symbol.";
+                TransactionMessage = "Error: Please select a stock symbol.";
                 return;
             }
 
@@ -118,7 +128,7 @@ namespace TradingSimulator.WPF.ViewModels
                 Transactions.Insert(0, transaction);
                 TransactionMessage = $"Success! Bought {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
                 RefreshData();
-                SymbolInput = string.Empty;
+                // Nie czyścimy SymbolInput, żeby użytkownik mógł łatwo dokupić więcej tego samego
                 QuantityInput = 0;
             }
             catch (Exception ex)
@@ -132,7 +142,7 @@ namespace TradingSimulator.WPF.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SymbolInput))
             {
-                TransactionMessage = "Error: Please enter a stock symbol to sell.";
+                TransactionMessage = "Error: Please select a stock symbol to sell.";
                 return;
             }
 
@@ -148,7 +158,6 @@ namespace TradingSimulator.WPF.ViewModels
                 Transactions.Insert(0, transaction);
                 TransactionMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
                 RefreshData();
-                SymbolInput = string.Empty;
                 QuantityInput = 0;
             }
             catch (Exception ex)
