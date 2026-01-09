@@ -25,6 +25,9 @@ namespace TradingSimulator.WPF.ViewModels
         private string _statusMessage = "Loading...";
 
         [ObservableProperty]
+        private string _transactionMessage; //so that it can display without obstructing statusMessages
+
+        [ObservableProperty]
         private decimal _balance;
 
         [ObservableProperty]
@@ -99,13 +102,13 @@ namespace TradingSimulator.WPF.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SymbolInput))
             {
-                StatusMessage = "Error: Please enter a stock symbol.";
+                TransactionMessage = "Error: Please enter a stock symbol.";
                 return;
             }
 
             if (QuantityInput <= 0)
             {
-                StatusMessage = "Error: Quantity must be greater than 0.";
+                TransactionMessage = "Error: Quantity must be greater than 0.";
                 return;
             }
 
@@ -113,14 +116,14 @@ namespace TradingSimulator.WPF.ViewModels
             {
                 var transaction = _portfolioService.Buy(SymbolInput, QuantityInput);
                 Transactions.Insert(0, transaction);
-                StatusMessage = $"Success! Bought {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
+                TransactionMessage = $"Success! Bought {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
                 RefreshData();
                 SymbolInput = string.Empty;
                 QuantityInput = 0;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"Transaction Failed: {ex.Message}";
+                TransactionMessage = $"Transaction Failed: {ex.Message}";
             }
         }
 
@@ -129,13 +132,13 @@ namespace TradingSimulator.WPF.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SymbolInput))
             {
-                StatusMessage = "Error: Please enter a stock symbol to sell.";
+                TransactionMessage = "Error: Please enter a stock symbol to sell.";
                 return;
             }
 
             if (QuantityInput <= 0)
             {
-                StatusMessage = "Error: Quantity must be greater than 0.";
+                TransactionMessage = "Error: Quantity must be greater than 0.";
                 return;
             }
 
@@ -143,14 +146,14 @@ namespace TradingSimulator.WPF.ViewModels
             {
                 var transaction = _portfolioService.Sell(SymbolInput, QuantityInput);
                 Transactions.Insert(0, transaction);
-                StatusMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
+                TransactionMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
                 RefreshData();
                 SymbolInput = string.Empty;
                 QuantityInput = 0;
             }
             catch (Exception ex)
             {
-                StatusMessage = $"SELL FAILED: {ex.Message}";
+                TransactionMessage = $"SELL FAILED: {ex.Message}";
             }
         }
 
@@ -159,7 +162,7 @@ namespace TradingSimulator.WPF.ViewModels
             Balance = _portfolioService.Balance;
             TotalValue = _portfolioService.TotalValue;
 
-            StatusMessage = $"Data Refreshed. Cash: {Balance:C} | Portfolio Value: {TotalValue:C}";
+            StatusMessage = $"Cash: {Balance:C} | Portfolio Value: {TotalValue:C}";
 
             PortfolioItems.Clear();
             foreach (var item in _portfolioService.Items)

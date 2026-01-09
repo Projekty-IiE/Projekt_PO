@@ -4,10 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:TradingSimulator.WPF.Views"
-        
+        xmlns:converters="clr-namespace:TradingSimulator.WPF.Converters"
         mc:Ignorable="d"
         Title="{Binding Title}" 
         Height="550" Width="900">
+
+    <Window.Resources>
+        <converters:MessageToColorConverter x:Key="MessageColorConverter"/>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -97,16 +102,28 @@
         </Border>
 
 
-        <StatusBar Grid.Row="1" Grid.ColumnSpan="2" Background="#EEEEEE" Padding="8">
-            <StatusBarItem>
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="2" Background="#EEEEEE" Padding="5">
+            <StatusBar.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                </ItemsPanelTemplate>
+            </StatusBar.ItemsPanel>
+
+            <StatusBarItem Grid.Column="0">
                 <TextBlock Text="{Binding StatusMessage}" FontWeight="Bold" Foreground="#333"/>
             </StatusBarItem>
 
-            <StatusBarItem HorizontalAlignment="Right">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Cash: " FontSize="14"/>
-                    <TextBlock Text="{Binding Balance, StringFormat=C2}" FontWeight="Bold" Foreground="Green" FontSize="14"/>
-                </StackPanel>
+            <StatusBarItem Grid.Column="1" Margin="0,0,10,0">
+                <TextBlock Text="{Binding TransactionMessage}" FontWeight="Bold">
+                    <TextBlock.Foreground>
+                        <Binding Path="TransactionMessage" Converter="{StaticResource MessageColorConverter}"/>
+                    </TextBlock.Foreground>
+                </TextBlock>
             </StatusBarItem>
         </StatusBar>
 
