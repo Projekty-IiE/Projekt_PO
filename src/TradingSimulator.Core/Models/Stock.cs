@@ -26,6 +26,8 @@ namespace TradingSimulator.Core.Models
             }
         }
 
+        public decimal LastChange { get; private set; } //required to color prices after ticks
+
         public List<decimal> PriceHistory { get; }
 
         public Stock(string symbol, string name, decimal initialPrice)
@@ -46,6 +48,7 @@ namespace TradingSimulator.Core.Models
         public void UpdatePrice(decimal percentageChange)
         {
             decimal newPrice = Price + Price * percentageChange;
+            LastChange = Math.Max(newPrice, 0.01m) - Price;
             Price = Math.Max(newPrice, 0.01m); // We assume that stock cannot fall below 0.01$
         }
 
