@@ -7,10 +7,6 @@ using TradingSimulator.Core.Enums;
 
 namespace TradingSimulator.Core.Models
 {
-    /// <summary>
-    /// Represents a single immutable trade operation (buy or sell)
-    /// executed for a specific stock at a given time and price.
-    /// </summary>
     public class Transaction
     {
         public Guid Id { get; }
@@ -20,10 +16,12 @@ namespace TradingSimulator.Core.Models
         public int Quantity { get; }
         public decimal PricePerShare { get; }
 
+        public decimal? RealizedPnL { get; }
+
         public decimal TotalValue => Quantity * PricePerShare;
 
         public Transaction(EnumTransacitonType type, string stockSymbol, int quantity, decimal pricePerShare,
-            DateTime? time = null)
+            DateTime? time = null, decimal? realizedPnL = null)
         {
             if (string.IsNullOrWhiteSpace(stockSymbol))
                 throw new ArgumentException("Stock symbol cannot be empty");
@@ -33,20 +31,21 @@ namespace TradingSimulator.Core.Models
 
             if (pricePerShare <= 0)
                 throw new ArgumentException("Price must be greater than 0");
-            
+
             Id = Guid.NewGuid();
             Time = time ?? DateTime.Now;
             Type = type;
             StockSymbol = stockSymbol.ToUpper();
             Quantity = quantity;
             PricePerShare = pricePerShare;
+            RealizedPnL = realizedPnL; 
         }
 
         public override string ToString()
         {
-            return $"ID: {Id} \n {Type.ToString().ToUpper()} | {StockSymbol} | QTY: " + 
+            return $"ID: {Id} \n {Type.ToString().ToUpper()} | {StockSymbol} | QTY: " +
                 $" {Quantity} | Price per share: {PricePerShare} | Total: {TotalValue} " +
-                $"| Time: {Time}";
+                $"| PnL: {RealizedPnL} | Time: {Time}";
         }
     }
 }
