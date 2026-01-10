@@ -7,6 +7,10 @@ using TradingSimulator.Core.Enums;
 
 namespace TradingSimulator.Core.Models
 {
+    /// <summary>
+    /// Represents a single immutable trade operation (buy or sell)
+    /// executed for a specific stock at a given time and price.
+    /// </summary>
     public class Transaction
     {
         public Guid Id { get; }
@@ -38,7 +42,8 @@ namespace TradingSimulator.Core.Models
             StockSymbol = stockSymbol.ToUpper();
             Quantity = quantity;
             PricePerShare = pricePerShare;
-            RealizedPnL = realizedPnL; 
+
+            RealizedPnL = realizedPnL;
         }
 
         public override string ToString()

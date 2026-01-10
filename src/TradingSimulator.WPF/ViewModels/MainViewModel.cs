@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
 using System.Windows.Threading;
-using System.Linq; 
+using System.Linq;
 
 namespace TradingSimulator.WPF.ViewModels
 {
@@ -33,6 +33,9 @@ namespace TradingSimulator.WPF.ViewModels
 
         [ObservableProperty]
         private decimal _totalRealizedPnL;
+
+        [ObservableProperty]
+        private decimal _totalUnrealizedPnL;
 
         [ObservableProperty]
         private string _autoTickButtonText = "START AUTO-TICK";
@@ -185,6 +188,15 @@ namespace TradingSimulator.WPF.ViewModels
             foreach (var item in _portfolioService.Items)
             {
                 PortfolioItems.Add(item);
+            }
+
+            if (PortfolioItems.Any())
+            {
+                TotalUnrealizedPnL = PortfolioItems.Sum(i => i.UnrealizedPnL);
+            }
+            else
+            {
+                TotalUnrealizedPnL = 0;
             }
         }
     }

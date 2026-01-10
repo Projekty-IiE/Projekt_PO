@@ -1,41 +1,59 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace TradingSimulator.Core.Models
 {
+    /// <summary>
+    /// Represents a portfolio item. Portfolio consists of given portfolio items. 
+    /// Portfolio item stores a given stock info (Stock object and Quantity of this stock).
+    /// </summary>
     public class PortfolioItem
     {
         public Stock Stock { get; }
         public int Quantity { get; private set; }
-        public decimal AveragePrice { get; private set; }
-
         public decimal TotalValue => Stock.Price * Quantity;
 
-        public decimal UnrealizedPnL => (Stock.Price - AveragePrice) * Quantity;
+        public decimal AveragePrice { get; private set; }
 
-        public PortfolioItem(Stock stock, int quantity, decimal averagePrice)
+        public decimal UnrealizedPnL => TotalValue - (AveragePrice * Quantity);
+
+        public PortfolioItem(Stock stock, int quantity, decimal purchasePrice)
         {
             Stock = stock ?? throw new ArgumentNullException(nameof(stock));
-            if (quantity <= 0) throw new ArgumentException("Quantity must be greater than 0");
+
+            if (quantity <= 0)
+                throw new ArgumentException("Quantity must be greater than 0");
 
             Quantity = quantity;
-            AveragePrice = averagePrice;
+            AveragePrice = purchasePrice; 
         }
 
-        public void Add(int amount, decimal priceAtBuy)
+        public void Add(int amount, decimal purchasePrice)
         {
-            if (amount <= 0) throw new ArgumentException("Amount must be greater than 0");
+            if (amount <= 0)
+                throw new ArgumentException("Amount must be greater than 0");
 
-            decimal totalCost = (Quantity * AveragePrice) + (amount * priceAtBuy);
             Quantity += amount;
-            AveragePrice = totalCost / Quantity;
+            AveragePrice = (AveragePrice * (Quantity - amount) + purchasePrice * amount) / Quantity;
         }
 
         public void Remove(int amount)
         {
-            if (amount <= 0) throw new ArgumentException("Amount must be greater than 0");
-            if (amount > Quantity) throw new InvalidOperationException("Not enough shares");
+            if (amount <= 0)
+                throw new ArgumentException("Amount must be greater than 0");
+
+            if (amount > Quantity)
+                throw new InvalidOperationException("Not enough shares to remove");
 
             Quantity -= amount;
+        }
+
+        public override string ToString()
+        {
+            return $"{Stock.Symbol} | Qty: {Quantity} | Value: {TotalValue:C}";
         }
     }
 }
