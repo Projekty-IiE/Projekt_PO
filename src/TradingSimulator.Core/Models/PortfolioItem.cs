@@ -16,9 +16,10 @@ namespace TradingSimulator.Core.Models
         public int Quantity { get; private set; }
         public decimal TotalValue => Stock.Price * Quantity;
 
-        public decimal AverageCost { get; private set; } //necessary to calculate unrealized profit and loss
-        public decimal UnrealizedPnL => TotalValue - AverageCost * Quantity; //displayed in PortfolioView
-        
+        public decimal AveragePrice { get; private set; }
+
+        public decimal UnrealizedPnL => TotalValue - (AveragePrice * Quantity);
+
         public PortfolioItem(Stock stock, int quantity, decimal purchasePrice)
         {
             Stock = stock ?? throw new ArgumentNullException(nameof(stock));
@@ -27,7 +28,7 @@ namespace TradingSimulator.Core.Models
                 throw new ArgumentException("Quantity must be greater than 0");
 
             Quantity = quantity;
-            AverageCost = purchasePrice;
+            AveragePrice = purchasePrice; 
         }
 
         public void Add(int amount, decimal purchasePrice)
@@ -36,7 +37,7 @@ namespace TradingSimulator.Core.Models
                 throw new ArgumentException("Amount must be greater than 0");
 
             Quantity += amount;
-            AverageCost = (AverageCost * (Quantity-amount) + purchasePrice * amount) / Quantity;
+            AveragePrice = (AveragePrice * (Quantity - amount) + purchasePrice * amount) / Quantity;
         }
 
         public void Remove(int amount)
@@ -56,4 +57,3 @@ namespace TradingSimulator.Core.Models
         }
     }
 }
-

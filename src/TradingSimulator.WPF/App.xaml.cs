@@ -6,28 +6,28 @@ using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
 using TradingSimulator.Core.Services;
 using TradingSimulator.WPF.ViewModels;
-using TradingSimulator.WPF.Views; 
-namespace TradingSimulator.WPF;
+using TradingSimulator.WPF.Views;
+using System.Globalization;
+using System.Threading;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
-public partial class App : Application
+namespace TradingSimulator.WPF
 {
-    public IServiceProvider Services { get; }
-
-    public App()
+    public partial class App : Application
     {
-        Services = ConfigureServices();
-    }
+        public IServiceProvider Services { get; }
 
-    private IServiceProvider ConfigureServices()
-    {
-        var services = new ServiceCollection();
-
-        services.AddSingleton<IMarketService>(provider => //When someone asks for IMarketService return MarketEngine object.
+        public App()
         {
-            var initialStocks = new List<Stock>
+            Services = ConfigureServices();
+        }
+
+        private IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            services.AddSingleton<IMarketService>(provider =>
+            {
+                var initialStocks = new List<Stock>
                 {
                     new Stock("AAPL", "Apple Inc.", 150m),
                     new Stock("TSLA", "Tesla Inc.", 220m),
@@ -35,27 +35,30 @@ public partial class App : Application
                     new Stock("GOOGL", "Alphabet Inc.", 2800m),
                     new Stock("PLTR", "Palantir Tech", 25m)
                 };
-            return new MarketEngine(initialStocks);
-        });
-        
-        services.AddSingleton<Portfolio>(provider => new Portfolio(10000m));
+                return new MarketEngine(initialStocks);
+            });
 
-        services.AddSingleton<IPortfolioService, PortfolioService>();
+            services.AddSingleton<Portfolio>(provider => new Portfolio(10000m));
+            services.AddSingleton<IPortfolioService, PortfolioService>();
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<MainWindow>();
 
-        services.AddSingleton<MainViewModel>();
+            return services.BuildServiceProvider();
+        }
 
-        services.AddSingleton<MainWindow>();
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            var culture = new CultureInfo("en-US");
 
-        return services.BuildServiceProvider();
-    }
+            Thread.CurrentThread.CurrentCulture = culture;
+            Thread.CurrentThread.CurrentUICulture = culture;
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
 
-    protected override void OnStartup(StartupEventArgs e)
-    {
-        base.OnStartup(e);
+            base.OnStartup(e);
 
-        var mainWindow = Services.GetRequiredService<MainWindow>();
-        mainWindow.Show();
+            var mainWindow = Services.GetRequiredService<MainWindow>();
+            mainWindow.Show();
+        }
     }
 }
-
-
