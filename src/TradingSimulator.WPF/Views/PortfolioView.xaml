@@ -2,7 +2,13 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="clr-namespace:TradingSimulator.WPF.Converters"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <converters:PriceChangeToColorConverter x:Key="PriceColorConverter"/>
+    </UserControl.Resources>
 
     <Grid Margin="10">
         <Grid.RowDefinitions>
@@ -32,7 +38,13 @@
                 <DataGridTextColumn Header="Profit/Loss" 
                                     Binding="{Binding UnrealizedPnL, StringFormat=C2}" 
                                     Width="100"
-                                    FontWeight="Bold"/>
+                                    FontWeight="Bold">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="{Binding UnrealizedPnL, Converter={StaticResource PriceColorConverter}}"/>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
                 <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=C2}" Width="*" FontWeight="Bold" Foreground="Green"/>
             </DataGrid.Columns>
