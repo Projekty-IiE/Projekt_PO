@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
 using System.Windows.Threading;
+using System.Linq;
 
 namespace TradingSimulator.WPF.ViewModels
 {
@@ -31,12 +32,16 @@ namespace TradingSimulator.WPF.ViewModels
         private decimal _totalValue;
 
         [ObservableProperty]
+        private decimal _totalRealizedPnL;
+
+        [ObservableProperty]
+        private decimal _totalUnrealizedPnL;
+
+        [ObservableProperty]
         private string _autoTickButtonText = "START AUTO-TICK";
 
         public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
         public ObservableCollection<Transaction> Transactions { get; } = new();
-
-        // --- ZMIANA 1: Lista dostępnych akcji dla Dropdowna ---
         public ObservableCollection<Stock> AvailableStocks { get; } = new();
 
         [ObservableProperty]
@@ -50,7 +55,6 @@ namespace TradingSimulator.WPF.ViewModels
             _marketService = marketService;
             _portfolioService = portfolioService;
 
-            // --- ZMIANA 2: Załadowanie listy akcji z serwisu do listy w ViewModelu ---
             foreach (var stock in _marketService.Stocks)
             {
                 AvailableStocks.Add(stock);
@@ -128,7 +132,6 @@ namespace TradingSimulator.WPF.ViewModels
                 Transactions.Insert(0, transaction);
                 TransactionMessage = $"Success! Bought {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
                 RefreshData();
-                // Nie czyścimy SymbolInput, żeby użytkownik mógł łatwo dokupić więcej tego samego
                 QuantityInput = 0;
             }
             catch (Exception ex)
@@ -156,7 +159,15 @@ namespace TradingSimulator.WPF.ViewModels
             {
                 var transaction = _portfolioService.Sell(SymbolInput, QuantityInput);
                 Transactions.Insert(0, transaction);
-                TransactionMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
+
+                if (transaction.RealizedPnL.HasValue)
+                {
+                    TotalRealizedPnL += transaction.RealizedPnL.Value;
+                }
+
+                string pnlText = transaction.RealizedPnL >= 0 ? $"+{transaction.RealizedPnL:C}" : $"{transaction.RealizedPnL:C}";
+                TransactionMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} (PnL: {pnlText})";
+
                 RefreshData();
                 QuantityInput = 0;
             }
@@ -177,6 +188,15 @@ namespace TradingSimulator.WPF.ViewModels
             foreach (var item in _portfolioService.Items)
             {
                 PortfolioItems.Add(item);
+            }
+
+            if (PortfolioItems.Any())
+            {
+                TotalUnrealizedPnL = PortfolioItems.Sum(i => i.UnrealizedPnL);
+            }
+            else
+            {
+                TotalUnrealizedPnL = 0;
             }
         }
     }

@@ -9,7 +9,7 @@
     <UserControl.Resources>
         <converters:PriceChangeToColorConverter x:Key="PriceColorConverter"/>
     </UserControl.Resources>
-    
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -21,60 +21,32 @@
                    FontWeight="Bold" 
                    Margin="0,0,0,10"/>
 
-        <DataGrid Grid.Row="1"
-          ItemsSource="{Binding PortfolioItems}"
-          AutoGenerateColumns="False"
-          IsReadOnly="True"
-          HeadersVisibility="Column"
-          GridLinesVisibility="Horizontal"
-          Background="White"
-          BorderBrush="#DDDDDD"
-          BorderThickness="1">
+        <DataGrid Grid.Row="1" 
+                  ItemsSource="{Binding PortfolioItems}" 
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column"
+                  Background="White">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Symbol" 
-                                    Binding="{Binding Stock.Symbol}" 
-                                    Width="80" 
-                                    FontWeight="Bold"/>
+                <DataGridTextColumn Header="Symbol" Binding="{Binding Stock.Symbol}" Width="80" FontWeight="Bold"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Stock.Name}" Width="120" FontWeight="SemiBold" Foreground="Gray"/>
+                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="80"/>
+                <DataGridTextColumn Header="Current Price" Binding="{Binding Stock.Price, StringFormat=C2}" Width="100"/>
 
-                <DataGridTextColumn Header="Name" 
-                                    Binding="{Binding Stock.Name}" 
-                                    Width="120" 
-                                    FontWeight="SemiBold"
-                                    Foreground="Gray"/>
-
-                <DataGridTextColumn Header="Quantity" 
-                                    Binding="{Binding Quantity}" 
-                                    Width="80"/>
-
-                <DataGridTextColumn Header="Current Price" 
-                                    Binding="{Binding Stock.Price, StringFormat=C2}" 
-                                    Width="100">
-                    <DataGridTextColumn.ElementStyle>
-                    <Style TargetType="TextBlock">
-                        <Setter Property="Foreground"
-                                Value="{Binding Stock.LastChange, Converter={StaticResource PriceColorConverter}}"/>
-                    </Style>                    
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
-                
                 <DataGridTextColumn Header="Profit/Loss" 
-                    Binding="{Binding UnrealizedPnL, StringFormat={}{0:C2}}" 
-                    Width="100"
-                    FontWeight="Bold">
+                                    Binding="{Binding UnrealizedPnL, StringFormat=C2}" 
+                                    Width="100"
+                                    FontWeight="Bold">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" 
-                    Value="{Binding UnrealizedPnL, Converter={StaticResource PriceColorConverter}}"/>
+                            <Setter Property="Foreground" Value="{Binding UnrealizedPnL, Converter={StaticResource PriceColorConverter}}"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                
-                <DataGridTextColumn Header="Total Value" 
-                                    Binding="{Binding TotalValue, StringFormat=C2}" 
-                                    Width="*" 
-                                    FontWeight="Bold"
-                                    Foreground="Green"/>
+
+                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=C2}" Width="*" FontWeight="Bold" Foreground="Green"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

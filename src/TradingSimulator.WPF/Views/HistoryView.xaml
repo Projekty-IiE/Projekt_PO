@@ -14,39 +14,41 @@
                    Margin="0,0,0,10"/>
 
         <DataGrid Grid.Row="1"
-          ItemsSource="{Binding Transactions}"
-          AutoGenerateColumns="False"
-          IsReadOnly="True"
-          HeadersVisibility="Column"
-          GridLinesVisibility="Horizontal"
-          Background="White"
-          BorderBrush="#DDDDDD"
-          BorderThickness="1">
-
+                  ItemsSource="{Binding Transactions}"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  HeadersVisibility="Column"
+                  GridLinesVisibility="Horizontal"
+                  Background="White"
+                  BorderBrush="#DDDDDD"
+                  BorderThickness="1">
 
             <DataGrid.Columns>
 
                 <DataGridTextColumn Header="Type"
                                     Binding="{Binding Type}"
-                                    Width="80"/>
-
+                                    Width="60"/>
                 <DataGridTextColumn Header="Symbol"
                                     Binding="{Binding StockSymbol}"
-                                    Width="80"
+                                    Width="70"
                                     FontWeight="Bold"/>
 
                 <DataGridTextColumn Header="Quantity"
                                     Binding="{Binding Quantity}"
-                                    Width="80"/>
+                                    Width="70"/>
 
                 <DataGridTextColumn Header="Price"
                                     Binding="{Binding PricePerShare, StringFormat=C2}"
-                                    Width="100"/>
+                                    Width="90"/>
+
+                <DataGridTextColumn Header="Realized PnL"
+                                    Binding="{Binding RealizedPnL, StringFormat=C2, TargetNullValue='-'}"
+                                    Width="100"
+                                    FontWeight="Bold"/>
 
                 <DataGridTextColumn Header="Time"
-                                    Binding="{Binding Time}"
+                                    Binding="{Binding Time, StringFormat='HH:mm:ss'}" 
                                     Width="*"/>
-
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

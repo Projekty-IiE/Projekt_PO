@@ -7,8 +7,7 @@
         xmlns:converters="clr-namespace:TradingSimulator.WPF.Converters"
         mc:Ignorable="d"
         Title="{Binding Title}" 
-        Height="550" Width="900">
-
+        Height="580" Width="900">
     <Window.Resources>
         <converters:MessageToColorConverter x:Key="MessageColorConverter"/>
     </Window.Resources>
@@ -78,7 +77,19 @@
                             Background="#D32F2F" Foreground="White" FontWeight="Bold" Cursor="Hand"/>
                 </UniformGrid>
 
-                <Separator Margin="0,10,0,20"/>
+
+                <StackPanel Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock Text="Total Realized PnL: " FontWeight="SemiBold" Foreground="#555"/>
+                        <TextBlock Text="{Binding TotalRealizedPnL, StringFormat=C2}" FontWeight="Bold" Foreground="#333"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,5,0,0">
+                        <TextBlock Text="Total Unrealized PnL: " FontWeight="SemiBold" Foreground="#555"/>
+                        <TextBlock Text="{Binding TotalUnrealizedPnL, StringFormat=C2}" FontWeight="Bold" Foreground="#333"/>
+                    </StackPanel>
+                </StackPanel>
+                <Separator Margin="0,20,0,20"/>
 
 
                 <TextBlock Text="Market Simulation" 

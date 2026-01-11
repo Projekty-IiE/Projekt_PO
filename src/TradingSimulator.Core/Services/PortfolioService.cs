@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
+using TradingSimulator.Core.Enums; 
 
 namespace TradingSimulator.Core.Services
 {
@@ -31,7 +32,16 @@ namespace TradingSimulator.Core.Services
         public Transaction Sell(string symbol, int quantity)
         {
             var stock = GetStock(symbol);
-            return portfolio.SellStock(stock, quantity);
+
+            var item = Items.FirstOrDefault(i => i.Stock.Symbol == symbol.ToUpper());
+
+            decimal avgBuyPrice = item?.AveragePrice ?? 0;
+
+            var tx = portfolio.SellStock(stock, quantity);
+
+            decimal pnl = (tx.PricePerShare - avgBuyPrice) * quantity;
+
+            return new Transaction(tx.Type, tx.StockSymbol, tx.Quantity, tx.PricePerShare, tx.Time, pnl);
         }
 
         private Stock GetStock(string symbol)
@@ -48,5 +58,4 @@ namespace TradingSimulator.Core.Services
             return stock;
         }
     }
-
 }
