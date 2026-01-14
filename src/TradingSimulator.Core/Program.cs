@@ -1,6 +1,5 @@
 ﻿using System;
 using TradingSimulator.Core.Models;
-using TradingSimulator.Core.Enums;
 using TradingSimulator.Core.Services;
 
 class Program

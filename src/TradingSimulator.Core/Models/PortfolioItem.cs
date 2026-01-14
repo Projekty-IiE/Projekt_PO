@@ -15,9 +15,7 @@ namespace TradingSimulator.Core.Models
         public Stock Stock { get; }
         public int Quantity { get; private set; }
         public decimal TotalValue => Stock.Price * Quantity;
-
         public decimal AveragePrice { get; private set; }
-
         public decimal UnrealizedPnL => TotalValue - (AveragePrice * Quantity);
 
         public PortfolioItem(Stock stock, int quantity, decimal purchasePrice)

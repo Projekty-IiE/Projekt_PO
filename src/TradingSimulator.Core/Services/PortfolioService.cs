@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
-using TradingSimulator.Core.Enums; 
 
 namespace TradingSimulator.Core.Services
 {
@@ -26,7 +25,12 @@ namespace TradingSimulator.Core.Services
         public Transaction Buy(string symbol, int quantity)
         {
             var stock = GetStock(symbol);
-            return portfolio.BuyStock(stock, quantity);
+            portfolio.BuyStock(stock, quantity);
+
+            return new BuyTransaction(stock.Symbol,
+                quantity,
+                stock.Price
+                );
         }
 
         public Transaction Sell(string symbol, int quantity)
@@ -37,11 +41,14 @@ namespace TradingSimulator.Core.Services
 
             decimal avgBuyPrice = item?.AveragePrice ?? 0;
 
-            var tx = portfolio.SellStock(stock, quantity);
+            portfolio.SellStock(stock, quantity);
 
-            decimal pnl = (tx.PricePerShare - avgBuyPrice) * quantity;
+            decimal realizedPnL = (stock.Price - avgBuyPrice) * quantity;
 
-            return new Transaction(tx.Type, tx.StockSymbol, tx.Quantity, tx.PricePerShare, tx.Time, pnl);
+            return new SellTransaction(stock.Symbol,
+                quantity,
+                stock.Price,
+                realizedPnL);   
         }
 
         private Stock GetStock(string symbol)
