@@ -6,6 +6,8 @@ using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
 using System.Windows.Threading;
 using System.Linq;
+using TradingSimulator.WPF.Services;
+
 
 namespace TradingSimulator.WPF.ViewModels
 {
@@ -39,6 +41,9 @@ namespace TradingSimulator.WPF.ViewModels
 
         [ObservableProperty]
         private string _autoTickButtonText = "START AUTO-TICK";
+
+        private readonly SoundService _soundService = new();
+
 
         public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
         public ObservableCollection<Transaction> Transactions { get; } = new();
@@ -130,6 +135,9 @@ namespace TradingSimulator.WPF.ViewModels
             {
                 var transaction = _portfolioService.Buy(SymbolInput, QuantityInput);
                 Transactions.Insert(0, transaction);
+
+                _soundService.Play("trade_open.wav");
+                
                 TransactionMessage = $"Success! Bought {transaction.Quantity} x {transaction.StockSymbol} @ {transaction.PricePerShare:C}";
                 RefreshData();
                 QuantityInput = 0;
@@ -159,6 +167,8 @@ namespace TradingSimulator.WPF.ViewModels
             {
                 var transaction = _portfolioService.Sell(SymbolInput, QuantityInput);
                 Transactions.Insert(0, transaction);
+
+                _soundService.Play("trade_close.wav");
 
                 if (transaction.RealizedPnL.HasValue)
                 {

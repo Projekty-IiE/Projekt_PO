@@ -16,6 +16,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\Sounds\trade_close.wav" />
+    <None Remove="Assets\Sounds\trade_open.wav" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Sounds\trade_close.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Sounds\trade_open.wav">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\TradingSimulator.Core\TradingSimulator.Core.csproj" />
   </ItemGroup>
 
