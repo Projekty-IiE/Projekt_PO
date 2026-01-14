@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TradingSimulator.Core.Enums;
 using TradingSimulator.Core.Exceptions;
 using TradingSimulator.Core.Interfaces;
 
@@ -46,8 +45,7 @@ namespace TradingSimulator.Core.Models
             UpdateCash(-totalCost);
             UpdateHoldings(stock, quantity);
 
-            return new Transaction(
-                EnumTransacitonType.Buy,
+            return new BuyTransaction(
                 stock.Symbol,
                 quantity,
                 stock.Price
@@ -75,8 +73,7 @@ namespace TradingSimulator.Core.Models
             UpdateHoldings(stock, -quantity);
             UpdateCash(totalValue);
 
-            return new Transaction(
-                EnumTransacitonType.Sell,
+            return new SellTransaction(
                 stock.Symbol,
                 quantity,
                 stock.Price
