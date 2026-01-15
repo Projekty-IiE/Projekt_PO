@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Threading;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
-using System.Windows.Threading;
-using System.Linq;
 using TradingSimulator.WPF.Services;
+using TradingSimulator.WPF.Views;
 
 
 namespace TradingSimulator.WPF.ViewModels
@@ -17,6 +18,7 @@ namespace TradingSimulator.WPF.ViewModels
         private readonly IMarketService _marketService;
         private readonly IPortfolioService _portfolioService;
         private DispatcherTimer _timer;
+        private TransactionHistoryWindow _transactionHistoryWindow;
 
         [ObservableProperty]
         private string _title = "Mini Trading Simulator";
@@ -187,6 +189,19 @@ namespace TradingSimulator.WPF.ViewModels
             }
         }
 
+        [RelayCommand]
+        private void OpenTransactionHistory()
+        {
+            if (_transactionHistoryWindow == null || !_transactionHistoryWindow.IsVisible)
+            {
+                _transactionHistoryWindow = new TransactionHistoryWindow(this);
+                _transactionHistoryWindow.Show();
+            }
+            else
+            {
+                _transactionHistoryWindow.Activate();
+            }
+        }
         private void RefreshData()
         {
             Balance = _portfolioService.Balance;
@@ -207,30 +222,6 @@ namespace TradingSimulator.WPF.ViewModels
             else
             {
                 TotalUnrealizedPnL = 0;
-            }
-        }
-
-        public PortfolioItem PortfolioItem
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public Stock Stock
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public Transaction Transaction
-        {
-            get => default;
-            set
-            {
             }
         }
     }

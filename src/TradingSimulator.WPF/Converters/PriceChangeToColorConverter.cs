@@ -12,11 +12,11 @@ namespace TradingSimulator.WPF.Converters
             if (value is decimal decimalValue)
             {
                 if (decimalValue > 0)
-                    return Brushes.Green; // Zysk
+                    return Brushes.Green; // Profit
                 if (decimalValue < 0)
-                    return Brushes.Red;   // Strata
+                    return Brushes.Red;   // Loss
             }
-            return Brushes.Black; // Zero lub błąd
+            return Brushes.Black; // No change; error
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -41,7 +41,7 @@ namespace TradingSimulator.Core.Models
         }
 
         /// <summary>
-        /// Transaction type exposed for UI / persistence.
+        /// Transaction type exposed for UI.
         /// </summary>
         public abstract string Type { get; }
 
@@ -50,14 +50,6 @@ namespace TradingSimulator.Core.Models
             return $"ID: {Id} \n {Type.ToUpper()} | {StockSymbol} | QTY: " +
                 $" {Quantity} | Price per share: {PricePerShare} | Total: {TotalValue} " +
                 $"| PnL: {RealizedPnL} | Time: {Time}";
-        }
-
-        public Stock Stock
-        {
-            get => default;
-            set
-            {
-            }
         }
     }
 }
