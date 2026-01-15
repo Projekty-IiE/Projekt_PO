@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="TradingSimulator.WPF.ViewModels.MainViewModel">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <AssociationLine Name="_portfolioService" Type="TradingSimulator.Core.Interfaces.IPortfolioService" FixedToPoint="true">
+      <Path>
+        <Point X="2.75" Y="2.062" />
+        <Point X="4.25" Y="2.062" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>kICIAAAgAIwgAQAQFAAMAAAAgEoEAAAAAgIAAIAAAAA=</HashCode>
+      <FileName>ViewModels\MainViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_marketService" />
+      <Field Name="_portfolioService" />
+      <Field Name="_soundService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="TradingSimulator.WPF.Services.SoundService">
+    <Position X="4.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAA=</HashCode>
+      <FileName>Services\SoundService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="TradingSimulator.Core.Interfaces.IMarketService" Collapsed="true">
+    <Position X="4.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="TradingSimulator.Core.Interfaces.IPortfolioService" Collapsed="true">
+    <Position X="4.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

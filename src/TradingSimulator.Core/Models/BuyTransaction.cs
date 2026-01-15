@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TradingSimulator.Core.Models
 {
-    internal class BuyTransaction : Transaction
+    public class BuyTransaction : Transaction
     {
         public override string Type => "BUY";
 

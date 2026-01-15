@@ -209,5 +209,29 @@ namespace TradingSimulator.WPF.ViewModels
                 TotalUnrealizedPnL = 0;
             }
         }
+
+        public PortfolioItem PortfolioItem
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Stock Stock
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public Transaction Transaction
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }

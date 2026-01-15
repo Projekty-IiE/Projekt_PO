@@ -51,5 +51,13 @@ namespace TradingSimulator.Core.Models
                 $" {Quantity} | Price per share: {PricePerShare} | Total: {TotalValue} " +
                 $"| PnL: {RealizedPnL} | Time: {Time}";
         }
+
+        public Stock Stock
+        {
+            get => default;
+            set
+            {
+            }
+        }
     }
 }
