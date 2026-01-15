@@ -7,7 +7,8 @@
         xmlns:converters="clr-namespace:TradingSimulator.WPF.Converters"
         mc:Ignorable="d"
         Title="{Binding Title}" 
-        Height="580" Width="900">
+        Height="800" Width="1200"
+        WindowState="Maximized">
     <Window.Resources>
         <converters:MessageToColorConverter x:Key="MessageColorConverter"/>
     </Window.Resources>
@@ -33,10 +34,6 @@
             </Grid.RowDefinitions>
 
             <views:PortfolioView Grid.Row="0"/>
-
-            <Separator Grid.Row="1" Margin="0,10"/>
-
-            <views:HistoryView Grid.Row="2"/>
 
         </Grid>
 
@@ -97,7 +94,7 @@
                            Margin="0,0,0,15" HorizontalAlignment="Center"/>
 
                 <StackPanel>
-                    <Button Content="NEXT TICK (+1 Day)" 
+                    <Button Content="NEXT TICK" 
                             Command="{Binding NextTickCommand}"
                             Height="40" Margin="0,0,0,10"
                             Background="#2196F3" Foreground="White" FontWeight="Bold" Cursor="Hand"/>
@@ -109,7 +106,20 @@
 
                     <TextBlock Text="Auto-Tick updates prices every 1 sec." 
                                FontSize="10" Foreground="Gray" HorizontalAlignment="Center" Margin="0,5,0,0" TextWrapping="Wrap"/>
+
+                    <Separator Margin="0,20,0,20"/>
+
+                    <Button Content="TRANSACTION HISTORY"
+                        Command="{Binding OpenTransactionHistoryCommand}"
+                        Height="40"
+                        Margin="0,10,0,0"
+                        Background="#555"
+                        Foreground="White"
+                        FontWeight="Bold"/>
+
+
                 </StackPanel>
+                
 
             </StackPanel>
         </Border>
