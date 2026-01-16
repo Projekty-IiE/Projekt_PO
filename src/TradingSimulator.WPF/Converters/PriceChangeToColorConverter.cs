@@ -16,7 +16,7 @@ namespace TradingSimulator.WPF.Converters
                 if (decimalValue < 0)
                     return Brushes.Red;   // Loss
             }
-            return Brushes.Black; // No change; error
+            return Brushes.AliceBlue; // No change; error
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

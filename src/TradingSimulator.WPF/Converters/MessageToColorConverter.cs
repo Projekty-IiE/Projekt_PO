@@ -20,7 +20,7 @@ namespace TradingSimulator.WPF.Converters
                 {
                     return Brushes.Green;
                 }
-                else { return Brushes.Red; }
+                else { return Brushes.PaleVioletRed; }
             }
             return Brushes.Black;
         }

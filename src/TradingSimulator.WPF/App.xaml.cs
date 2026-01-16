@@ -32,13 +32,23 @@ namespace TradingSimulator.WPF
                     new Stock("AAPL", "Apple Inc.", 150m),
                     new Stock("TSLA", "Tesla Inc.", 220m),
                     new Stock("MSFT", "Microsoft", 310m),
-                    new Stock("GOOGL", "Alphabet Inc.", 2800m),
-                    new Stock("PLTR", "Palantir Tech", 25m)
+                    new Stock("GOOGL", "Alphabet Inc.", 280m),
+                    new Stock("PLTR", "Palantir Tech", 140m),
+                    new Stock("BTCUSD", "Bitcoin", 96430m),
+                    new Stock("NFLX", "Netflix Inc.", 88m),
+                    new Stock("ADBE", "Adobe Inc.", 112m),
+                    new Stock("WHR", "Whirlpool Corporation", 84m),
+                    new Stock("INTU", "Intuit Inc.", 25m),
+                    new Stock("ORCL", "Oracle Corporation", 121m),
+                    new Stock("ICE", "Intercontinental Exch.", 140m),
+                    new Stock("JPM", "JP Morgan Chase", 170m),
+                    new Stock("NKE", "Nike", 70m),
+                    new Stock("META", "Meta", 690m)
                 };
                 return new MarketEngine(initialStocks);
             });
 
-            services.AddSingleton<Portfolio>(provider => new Portfolio(10000m));
+            services.AddSingleton<Portfolio>(provider => new Portfolio(100000m));
             services.AddSingleton<IPortfolioService, PortfolioService>();
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<MainWindow>();
