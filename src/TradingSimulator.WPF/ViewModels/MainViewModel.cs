@@ -27,6 +27,7 @@ namespace TradingSimulator.WPF.ViewModels
         public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
         public ObservableCollection<Transaction> Transactions { get; } = new();
         public ObservableCollection<Stock> AvailableStocks { get; } = new();
+        public IPortfolioService PortfolioService => _portfolioService; //so that MainWindow can see acc balance
 
         [ObservableProperty]
         private string[] _labels = Array.Empty<string>();
