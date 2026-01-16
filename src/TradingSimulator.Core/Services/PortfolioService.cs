@@ -16,6 +16,9 @@ namespace TradingSimulator.Core.Services
         public decimal TotalValue => portfolio.TotalValue;
         public IReadOnlyList<PortfolioItem> Items => portfolio.Items;
 
+        public IReadOnlyList<Transaction> Transactions => portfolio.Transactions;
+
+
         public PortfolioService(Portfolio portfolio, IMarketService marketService)
         {
             this.portfolio = portfolio ?? throw new ArgumentNullException(nameof(portfolio));
@@ -25,30 +28,14 @@ namespace TradingSimulator.Core.Services
         public Transaction Buy(string symbol, int quantity)
         {
             var stock = GetStock(symbol);
-            portfolio.BuyStock(stock, quantity);
 
-            return new BuyTransaction(stock.Symbol,
-                quantity,
-                stock.Price
-                );
+            return portfolio.BuyStock(stock, quantity);
         }
 
         public Transaction Sell(string symbol, int quantity)
         {
             var stock = GetStock(symbol);
-
-            var item = Items.FirstOrDefault(i => i.Stock.Symbol == symbol.ToUpper());
-
-            decimal avgBuyPrice = item?.AveragePrice ?? 0;
-
-            portfolio.SellStock(stock, quantity);
-
-            decimal realizedPnL = (stock.Price - avgBuyPrice) * quantity;
-
-            return new SellTransaction(stock.Symbol,
-                quantity,
-                stock.Price,
-                realizedPnL);   
+            return portfolio.SellStock(stock, quantity);
         }
 
         private Stock GetStock(string symbol)
@@ -63,6 +50,26 @@ namespace TradingSimulator.Core.Services
                 throw new ArgumentException($"Stock {symbol} not found.");
 
             return stock;
+        }
+
+
+        public void LoadPortfolio(decimal balance, 
+            List<PortfolioItem> items, List<Transaction> transactions)
+        {
+            var safeItems = items ?? new List<PortfolioItem>();
+
+            foreach(var item in safeItems)
+            {
+                var liveStock = marketService.Stocks
+                    .FirstOrDefault(s => s.Symbol == item.Symbol);
+                if(liveStock != null)
+                {
+                    item.Stock = liveStock;
+                }
+
+            }
+
+            portfolio.LoadPortfolio(balance, safeItems, transactions);
         }
     }
 }

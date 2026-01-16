@@ -12,7 +12,10 @@ namespace TradingSimulator.Core.Interfaces
         decimal Balance { get; }
         decimal TotalValue { get; }
         IReadOnlyList<PortfolioItem> Items { get; }
+        IReadOnlyList<Transaction> Transactions { get; }
         Transaction Buy(string symbol, int quantity);
         Transaction Sell(string symbol, int quantity);
+        void LoadPortfolio(decimal balance, 
+            List<PortfolioItem> items, List<Transaction> transactions);
     }
 }

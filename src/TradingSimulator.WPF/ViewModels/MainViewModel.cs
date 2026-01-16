@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Threading;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
+using TradingSimulator.Core.Services;
 using TradingSimulator.WPF.Services;
 using TradingSimulator.WPF.Views;
 using LiveCharts;
@@ -20,6 +21,7 @@ namespace TradingSimulator.WPF.ViewModels
 
         private readonly IMarketService _marketService;
         private readonly IPortfolioService _portfolioService;
+        private readonly FileService _fileService = new FileService(); 
         private readonly SoundService _soundService = new();
         private DispatcherTimer _timer = null!;
         private TransactionHistoryWindow? _transactionHistoryWindow;
@@ -266,6 +268,61 @@ namespace TradingSimulator.WPF.ViewModels
             Labels = Enumerable.Range(1, stock.PriceHistory.Count)
                                .Select(i => i.ToString())
                                .ToArray();
+        }
+
+        [RelayCommand]
+        private void SaveSession()
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName="TradingSave",
+                DefaultExt=".json",
+                Filter="JSON documents (.json)|*.json"
+            };
+
+            if(dialog.ShowDialog()==true)
+            {
+                var state = new SessionState()
+                {
+                    Balance = _portfolioService.Balance,
+                    Items = _portfolioService.Items.ToList(),
+                    Transactions = _portfolioService.Transactions.ToList()
+                };
+                _fileService.Save(dialog.FileName, state);
+                StatusMessage = "Session Saved Successfully!";
+            }
+        }
+        [RelayCommand]
+        private void LoadSession()
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".json",
+                Filter = "JSON documents (.json)|*.json"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var state = _fileService.Load(dialog.FileName);
+
+                if (state != null)
+                {
+                    _portfolioService.LoadPortfolio(
+                        state.Balance, 
+                        state.Items ?? new List<PortfolioItem>(),
+                        state.Transactions ?? new List<Transaction>()
+                        );
+
+                    RefreshData(); 
+                    Transactions.Clear();
+                    foreach (var t in _portfolioService.Transactions)
+                    {
+                        Transactions.Insert(0, t);
+                    }
+
+                    StatusMessage = "Session Loaded Successfully!";
+                }
+            }
         }
 
     }

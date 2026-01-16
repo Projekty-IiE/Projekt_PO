@@ -148,6 +148,38 @@
                         Background="#555"
                         Foreground="White"
                         FontWeight="Bold"/>
+                    <Separator Margin="0,20,0,20"/>
+
+                    <TextBlock Text="Session Options" 
+                               FontSize="16" FontWeight="Bold" Foreground="AliceBlue" 
+                               Margin="0,0,0,15" HorizontalAlignment="Center"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" 
+                                Content="💾 SAVE" 
+                                Command="{Binding SaveSessionCommand}" 
+                                Height="40"
+                                Margin="0,0,5,0"
+                                Background="#2ecc71" 
+                                Foreground="White"
+                                FontWeight="Bold"
+                                Cursor="Hand"/>
+
+                        <Button Grid.Column="1" 
+                                Content="📂 LOAD" 
+                                Command="{Binding LoadSessionCommand}" 
+                                Height="40"
+                                Margin="5,0,0,0"
+                                Background="#3498db" 
+                                Foreground="White" 
+                                FontWeight="Bold"
+                                Cursor="Hand"/>
+                    </Grid>
 
                 </StackPanel>
             </StackPanel>

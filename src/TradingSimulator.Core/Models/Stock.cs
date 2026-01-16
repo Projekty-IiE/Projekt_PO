@@ -30,6 +30,7 @@ namespace TradingSimulator.Core.Models
 
         public List<decimal> PriceHistory { get; }
 
+        public Stock() { PriceHistory = new List<decimal>(); } //for json
         public Stock(string symbol, string name, decimal initialPrice)
         {
             if (string.IsNullOrWhiteSpace(symbol))
@@ -40,7 +41,7 @@ namespace TradingSimulator.Core.Models
 
             Symbol = symbol.ToUpper();
             Name = name;
-            PriceHistory = new List<decimal>();
+            PriceHistory = new List<decimal> { price };
 
             Price = initialPrice;
         }
