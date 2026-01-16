@@ -19,19 +19,77 @@
         <TextBlock Text="Your Portfolio" 
                    FontSize="20" 
                    FontWeight="Bold" 
-                   Margin="0,0,0,10"/>
+                   Margin="0,0,0,10"
+                   Foreground="AliceBlue"/>
 
         <DataGrid Grid.Row="1" 
                   ItemsSource="{Binding PortfolioItems}" 
+                  SelectedItem="{Binding SelectedPortfolioItem}"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
-                  GridLinesVisibility="Horizontal"
                   HeadersVisibility="Column"
-                  Background="White">
+                  GridLinesVisibility="None"
+                  Background="#181818"
+                  BorderBrush="#333333"
+                  BorderThickness="1"
+                  Foreground="#F5F5F5"
+                  RowBackground="#202020"
+                  AlternatingRowBackground="#1E1E1E"
+                  Focusable="False">
+
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Background" Value="#202020"/>
+                    <Setter Property="Foreground" Value="#F5F5F5"/>
+
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#333333"/>
+                            <Setter Property="Foreground" Value="AliceBlue"/>
+                        </Trigger>
+
+                        <!-- HOVER -->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#262626"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
+            <DataGrid.ColumnHeaderStyle>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#202020"/>
+                    <Setter Property="Foreground" Value="#BDBDBD"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
+                    <Setter Property="BorderBrush" Value="#333333"/>
+                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                </Style>
+            </DataGrid.ColumnHeaderStyle>
+
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="6,4"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="#F5F5F5"/>
+
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" Value="#333333"/>
+                            <Setter Property="Foreground" Value="AliceBlue"/>
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#262626"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.CellStyle>
+
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Symbol" Binding="{Binding Stock.Symbol}" Width="80" FontWeight="Bold"/>
-                <DataGridTextColumn Header="Name" Binding="{Binding Stock.Name}" Width="120" FontWeight="SemiBold" Foreground="Gray"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Stock.Name}" Width="120" FontWeight="SemiBold"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="80"/>
                 <DataGridTextColumn Header="Current Price" Binding="{Binding Stock.Price, StringFormat=C2}" Width="100"/>
 
@@ -46,7 +104,7 @@
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
 
-                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=C2}" Width="*" FontWeight="Bold" Foreground="Green"/>
+                <DataGridTextColumn Header="Total Value" Binding="{Binding TotalValue, StringFormat=C2}" Width="*" FontWeight="Bold" Foreground="AliceBlue"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

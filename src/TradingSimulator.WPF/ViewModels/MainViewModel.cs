@@ -8,6 +8,9 @@ using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
 using TradingSimulator.WPF.Services;
 using TradingSimulator.WPF.Views;
+using LiveCharts;
+using LiveCharts.Wpf;
+using System.Windows.Media;
 
 
 namespace TradingSimulator.WPF.ViewModels
@@ -17,17 +20,22 @@ namespace TradingSimulator.WPF.ViewModels
 
         private readonly IMarketService _marketService;
         private readonly IPortfolioService _portfolioService;
-        private DispatcherTimer _timer;
-        private TransactionHistoryWindow _transactionHistoryWindow;
+        private readonly SoundService _soundService = new();
+        private DispatcherTimer _timer = null!;
+        private TransactionHistoryWindow? _transactionHistoryWindow;
+        public SeriesCollection PriceSeries { get; set; } = new SeriesCollection();
+        public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
+        public ObservableCollection<Transaction> Transactions { get; } = new();
+        public ObservableCollection<Stock> AvailableStocks { get; } = new();
 
         [ObservableProperty]
-        private string _title = "Mini Trading Simulator";
+        private string[] _labels = Array.Empty<string>();
 
         [ObservableProperty]
-        private string _statusMessage = "Loading...";
+        private string _statusMessage = "Welcome!";
 
         [ObservableProperty]
-        private string _transactionMessage;
+        private string? _transactionMessage;
 
         [ObservableProperty]
         private decimal _balance;
@@ -44,18 +52,14 @@ namespace TradingSimulator.WPF.ViewModels
         [ObservableProperty]
         private string _autoTickButtonText = "START AUTO-TICK";
 
-        private readonly SoundService _soundService = new();
-
-
-        public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
-        public ObservableCollection<Transaction> Transactions { get; } = new();
-        public ObservableCollection<Stock> AvailableStocks { get; } = new();
-
         [ObservableProperty]
         private string _symbolInput = string.Empty;
 
         [ObservableProperty]
         private int _quantityInput;
+
+        [ObservableProperty]
+        private PortfolioItem? _selectedPortfolioItem;
 
         public MainViewModel(IMarketService marketService, IPortfolioService portfolioService)
         {
@@ -68,8 +72,10 @@ namespace TradingSimulator.WPF.ViewModels
             }
 
             InitializeTimer();
+            WarmUpMarket(20);
             SeedDemoData();
             RefreshData();
+            SelectedPortfolioItem = PortfolioItems.FirstOrDefault();
         }
 
         private void InitializeTimer()
@@ -82,12 +88,20 @@ namespace TradingSimulator.WPF.ViewModels
             _timer.Tick += (s, e) => NextTick();
         }
 
+        private void WarmUpMarket(int ticks)
+        {
+            for (int i = 0; i < ticks; i++)
+            {
+                _marketService.UpdateMarket();
+            }
+        }
         private void SeedDemoData()
         {
             try
             {
                 _portfolioService.Buy("AAPL", 5);
                 _portfolioService.Buy("TSLA", 2);
+                _portfolioService.Buy("MSFT", 1);
             }
             catch { }
         }
@@ -96,6 +110,7 @@ namespace TradingSimulator.WPF.ViewModels
         private void NextTick()
         {
             _marketService.UpdateMarket();
+            UpdateChart(SelectedPortfolioItem?.Stock);
             RefreshData();
         }
 
@@ -204,10 +219,10 @@ namespace TradingSimulator.WPF.ViewModels
         }
         private void RefreshData()
         {
+            var selectedSymbol = SelectedPortfolioItem?.Stock.Symbol;
+
             Balance = _portfolioService.Balance;
             TotalValue = _portfolioService.TotalValue;
-
-            StatusMessage = $"Cash: {Balance:C} | Portfolio Value: {TotalValue:C}";
 
             PortfolioItems.Clear();
             foreach (var item in _portfolioService.Items)
@@ -215,14 +230,42 @@ namespace TradingSimulator.WPF.ViewModels
                 PortfolioItems.Add(item);
             }
 
-            if (PortfolioItems.Any())
-            {
-                TotalUnrealizedPnL = PortfolioItems.Sum(i => i.UnrealizedPnL);
-            }
-            else
-            {
-                TotalUnrealizedPnL = 0;
-            }
+            SelectedPortfolioItem = PortfolioItems
+                .FirstOrDefault(p => p.Stock.Symbol == selectedSymbol);
+
+            TotalUnrealizedPnL = PortfolioItems.Any()
+                ? PortfolioItems.Sum(i => i.UnrealizedPnL)
+                : 0;
         }
+
+        partial void OnSelectedPortfolioItemChanged(PortfolioItem? value)
+        {
+            if (value?.Stock == null)
+                return;
+            UpdateChart(value.Stock);
+        }
+
+        private void UpdateChart(Stock? stock)
+        {
+            if (stock == null)
+                return;
+
+            PriceSeries.Clear();
+
+            PriceSeries.Add(new LineSeries
+            {
+                Title = stock.Symbol,
+                Values = new ChartValues<decimal>(stock.PriceHistory),
+                PointGeometry = null,
+                StrokeThickness = 2,
+                LineSmoothness = 0.1,
+                Fill = Brushes.Transparent
+            });
+
+            Labels = Enumerable.Range(1, stock.PriceHistory.Count)
+                               .Select(i => i.ToString())
+                               .ToArray();
+        }
+
     }
 }
