@@ -213,13 +213,13 @@
 
             <StatusBarItem Grid.Column="2" Margin="0,0,10,0">
                 <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="Stan konta: " 
+                    <TextBlock Text="Cash Balance: " 
                        Foreground="LightGray" 
                        VerticalAlignment="Center"/>
 
-                    <TextBlock Text="{Binding PortfolioService.Balance, StringFormat='{}{0:C}'}" 
+                    <TextBlock Text="{Binding Balance, StringFormat='{}{0:C}'}" 
                        FontWeight="Bold" 
-                       Foreground="Gold" 
+                       Foreground="AliceBlue" 
                        VerticalAlignment="Center"/>
                 </StackPanel>
             </StatusBarItem>
