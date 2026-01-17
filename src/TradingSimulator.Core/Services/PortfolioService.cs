@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
+
 
 namespace TradingSimulator.Core.Services
 {
@@ -13,11 +15,13 @@ namespace TradingSimulator.Core.Services
         private readonly Portfolio portfolio;
         private readonly IMarketService marketService;
         public decimal Balance => portfolio.Balance;
+        public decimal RealizedPnL => portfolio.RealizedPnL;
         public decimal TotalValue => portfolio.TotalValue;
         public IReadOnlyList<PortfolioItem> Items => portfolio.Items;
 
         public IReadOnlyList<Transaction> Transactions => portfolio.Transactions;
 
+        public IReadOnlyList<Stock> AllStocks => marketService.Stocks;
 
         public PortfolioService(Portfolio portfolio, IMarketService marketService)
         {
@@ -53,23 +57,46 @@ namespace TradingSimulator.Core.Services
         }
 
 
-        public void LoadPortfolio(decimal balance, 
-            List<PortfolioItem> items, List<Transaction> transactions)
+        public void LoadPortfolio(decimal balance, decimal realizedPnL,
+    List<PortfolioItem>? items, List<Transaction>? transactions, List<Stock>? marketData)
         {
+            if (marketData != null) //loading whole market
+            {
+                foreach (var savedStock in marketData)
+                {
+                    var liveStock = marketService.Stocks
+                        .FirstOrDefault(s => s.Symbol == savedStock.Symbol);
+
+                    if (liveStock != null)
+                    {
+                        liveStock.Price = savedStock.Price;
+
+                        if (savedStock.PriceHistory != null && savedStock.PriceHistory.Count > 0)
+                        {
+                            liveStock.PriceHistory.Clear();
+                            //liveStock.PriceHistory.AddRange(savedStock.PriceHistory);
+                            foreach (var price in savedStock.PriceHistory)
+                            {
+                                liveStock.PriceHistory.Add(price);
+                            }
+                        }
+                    }
+                }
+            }
+
             var safeItems = items ?? new List<PortfolioItem>();
 
-            foreach(var item in safeItems)
+            foreach (var item in safeItems) //loading owned stocks
             {
                 var liveStock = marketService.Stocks
                     .FirstOrDefault(s => s.Symbol == item.Symbol);
-                if(liveStock != null)
+                if (liveStock != null)
                 {
                     item.Stock = liveStock;
                 }
-
             }
 
-            portfolio.LoadPortfolio(balance, safeItems, transactions);
+            portfolio.LoadPortfolio(balance, realizedPnL, safeItems, transactions ?? new List<Transaction>());
         }
     }
 }

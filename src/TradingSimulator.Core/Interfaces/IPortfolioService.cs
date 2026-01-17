@@ -10,12 +10,14 @@ namespace TradingSimulator.Core.Interfaces
     public interface IPortfolioService
     {
         decimal Balance { get; }
+        decimal RealizedPnL { get; }
         decimal TotalValue { get; }
         IReadOnlyList<PortfolioItem> Items { get; }
         IReadOnlyList<Transaction> Transactions { get; }
+        IReadOnlyList<Stock> AllStocks { get; }
         Transaction Buy(string symbol, int quantity);
         Transaction Sell(string symbol, int quantity);
-        void LoadPortfolio(decimal balance, 
-            List<PortfolioItem> items, List<Transaction> transactions);
+        void LoadPortfolio(decimal balance, decimal realizedPnL, 
+            List<PortfolioItem>? items, List<Transaction>? transactions, List<Stock>? marketData);
     }
 }

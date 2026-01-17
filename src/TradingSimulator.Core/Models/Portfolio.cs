@@ -17,6 +17,7 @@ namespace TradingSimulator.Core.Models
         private readonly List<PortfolioItem> items;
 
         public decimal Balance => balance;
+        public decimal RealizedPnL { get; private set; }
         public IReadOnlyList<PortfolioItem> Items => items;
 
         public decimal TotalValue => balance + items.Sum(i => i.TotalValue);
@@ -77,6 +78,7 @@ namespace TradingSimulator.Core.Models
 
             decimal realizedPnL = (stock.Price - item.AveragePrice) * quantity;
             decimal totalValue = stock.Price * quantity;
+            RealizedPnL += realizedPnL;
 
             UpdateHoldings(stock, -quantity);
             UpdateCash(totalValue);
@@ -125,10 +127,11 @@ namespace TradingSimulator.Core.Models
                     items.Remove(item);
             }
         }
-        public void LoadPortfolio(decimal newBalance, 
+        public void LoadPortfolio(decimal newBalance, decimal newPnL,
             IEnumerable<PortfolioItem> newItems, IEnumerable<Transaction> history)
         {
             balance = newBalance;
+            RealizedPnL = newPnL;
             items.Clear();
             if(newItems!=null)
             {

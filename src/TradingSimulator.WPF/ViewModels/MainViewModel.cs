@@ -190,11 +190,6 @@ namespace TradingSimulator.WPF.ViewModels
 
                 _soundService.Play("trade_close.wav");
 
-                if (transaction.RealizedPnL.HasValue)
-                {
-                    TotalRealizedPnL += transaction.RealizedPnL.Value;
-                }
-
                 string pnlText = transaction.RealizedPnL >= 0 ? $"+{transaction.RealizedPnL:C}" : $"{transaction.RealizedPnL:C}";
                 TransactionMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} (PnL: {pnlText})";
 
@@ -226,6 +221,7 @@ namespace TradingSimulator.WPF.ViewModels
 
             Balance = _portfolioService.Balance;
             TotalValue = _portfolioService.TotalValue;
+            TotalRealizedPnL = _portfolioService.RealizedPnL;
 
             PortfolioItems.Clear();
             foreach (var item in _portfolioService.Items)
@@ -285,8 +281,10 @@ namespace TradingSimulator.WPF.ViewModels
                 var state = new SessionState()
                 {
                     Balance = _portfolioService.Balance,
+                    RealizedPnL=_portfolioService.RealizedPnL,
                     Items = _portfolioService.Items.ToList(),
-                    Transactions = _portfolioService.Transactions.ToList()
+                    Transactions = _portfolioService.Transactions.ToList(),
+                    MarketData=_portfolioService.AllStocks.ToList(),
                 };
                 _fileService.Save(dialog.FileName, state);
                 StatusMessage = "Session Saved Successfully!";
@@ -309,8 +307,10 @@ namespace TradingSimulator.WPF.ViewModels
                 {
                     _portfolioService.LoadPortfolio(
                         state.Balance, 
+                        state.RealizedPnL,
                         state.Items ?? new List<PortfolioItem>(),
-                        state.Transactions ?? new List<Transaction>()
+                        state.Transactions ?? new List<Transaction>(),
+                        state.MarketData
                         );
 
                     RefreshData(); 

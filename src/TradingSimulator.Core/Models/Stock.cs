@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace TradingSimulator.Core.Models
 {
@@ -9,14 +10,14 @@ namespace TradingSimulator.Core.Models
     /// </summary>
     public class Stock
     {
-        public string Symbol { get; } // Ticker ex.: "NVDA"
+        public string Symbol { get; set; } // Ticker ex.: "NVDA"
         public string Name { get; } // Full name ex.: "NVIDIA Corporation"
 
         private decimal price;
         public decimal Price
         {
             get => price;
-            private set
+            set
             {
                 if (value <= 0)
                     throw new ArgumentException("Price must be greater than 0");
@@ -28,9 +29,9 @@ namespace TradingSimulator.Core.Models
 
         public decimal LastChange { get; private set; } //required to color prices after ticks
 
-        public List<decimal> PriceHistory { get; }
+        public ObservableCollection<decimal> PriceHistory { get; set; }
 
-        public Stock() { PriceHistory = new List<decimal>(); } //for json
+        public Stock() { PriceHistory = new ObservableCollection<decimal>(); } //for json
         public Stock(string symbol, string name, decimal initialPrice)
         {
             if (string.IsNullOrWhiteSpace(symbol))
@@ -41,7 +42,7 @@ namespace TradingSimulator.Core.Models
 
             Symbol = symbol.ToUpper();
             Name = name;
-            PriceHistory = new List<decimal> { price };
+            PriceHistory = new ObservableCollection<decimal> { initialPrice };
 
             Price = initialPrice;
         }
