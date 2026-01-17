@@ -18,7 +18,7 @@ namespace TradingSimulator.WPF.Converters
                 if (message.StartsWith("Success", StringComparison.OrdinalIgnoreCase) ||
                     message.StartsWith("SOLD", StringComparison.OrdinalIgnoreCase))
                 {
-                    return Brushes.Green;
+                    return Brushes.LimeGreen;
                 }
                 else { return Brushes.PaleVioletRed; }
             }

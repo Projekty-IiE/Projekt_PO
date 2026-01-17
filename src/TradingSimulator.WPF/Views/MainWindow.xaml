@@ -148,6 +148,38 @@
                         Background="#555"
                         Foreground="White"
                         FontWeight="Bold"/>
+                    <Separator Margin="0,20,0,20"/>
+
+                    <TextBlock Text="Session Options" 
+                               FontSize="16" FontWeight="Bold" Foreground="AliceBlue" 
+                               Margin="0,0,0,15" HorizontalAlignment="Center"/>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" 
+                                Content="💾 SAVE" 
+                                Command="{Binding SaveSessionCommand}" 
+                                Height="40"
+                                Margin="0,0,5,0"
+                                Background="#2ecc71" 
+                                Foreground="White"
+                                FontWeight="Bold"
+                                Cursor="Hand"/>
+
+                        <Button Grid.Column="1" 
+                                Content="📂 LOAD" 
+                                Command="{Binding LoadSessionCommand}" 
+                                Height="40"
+                                Margin="5,0,0,0"
+                                Background="#3498db" 
+                                Foreground="White" 
+                                FontWeight="Bold"
+                                Cursor="Hand"/>
+                    </Grid>
 
                 </StackPanel>
             </StackPanel>
@@ -161,6 +193,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                     </Grid>
                 </ItemsPanelTemplate>
@@ -170,12 +203,25 @@
                 <TextBlock Text="{Binding StatusMessage}" FontWeight="Bold" Foreground="AliceBlue"/>
             </StatusBarItem>
 
-            <StatusBarItem Grid.Column="1" Margin="0,0,10,0">
+            <StatusBarItem Grid.Column="1" Margin="0,0,20,0">
                 <TextBlock Text="{Binding TransactionMessage}" FontWeight="Bold">
                     <TextBlock.Foreground>
                         <Binding Path="TransactionMessage" Converter="{StaticResource MessageColorConverter}"/>
                     </TextBlock.Foreground>
                 </TextBlock>
+            </StatusBarItem>
+
+            <StatusBarItem Grid.Column="2" Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Cash Balance: " 
+                       Foreground="LightGray" 
+                       VerticalAlignment="Center"/>
+
+                    <TextBlock Text="{Binding Balance, StringFormat='{}{0:C}'}" 
+                       FontWeight="Bold" 
+                       Foreground="AliceBlue" 
+                       VerticalAlignment="Center"/>
+                </StackPanel>
             </StatusBarItem>
         </StatusBar>
 

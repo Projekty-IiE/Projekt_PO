@@ -33,6 +33,7 @@ namespace TradingSimulator.Core.Services
                 decimal changePercent = GetChange();
 
                 stock.UpdatePrice(changePercent);
+
             }
         }
     }
