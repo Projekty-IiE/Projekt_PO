@@ -11,14 +11,16 @@ namespace TradingSimulator.Core.Models
     /// </summary>
     public abstract class Transaction
     {
-        public Guid Id { get; }
-        public DateTime Time { get; }
-        public string StockSymbol { get; }
-        public int Quantity { get; }
-        public decimal PricePerShare { get; }
-        public decimal? RealizedPnL { get; }
+        public Guid Id { get; private set; }
+        public DateTime Time { get; private set; }
+        public string StockSymbol { get; private set; } = null!;
+        public int Quantity { get; private set; }
+        public decimal PricePerShare { get; private set; }
+        public decimal? RealizedPnL { get; private set; }
 
         public decimal TotalValue => Quantity * PricePerShare;
+
+        protected Transaction() { }
 
         public Transaction(string stockSymbol, int quantity, decimal pricePerShare,
             DateTime? time = null, decimal? realizedPnL = null)
@@ -47,7 +49,7 @@ namespace TradingSimulator.Core.Models
 
         public override string ToString()
         {
-            return $"ID: {Id} \n {Type.ToUpper()} | {StockSymbol} | QTY: " +
+            return $"ID: {Id} \n {Type?.ToUpper()} | {StockSymbol} | QTY: " +
                 $" {Quantity} | Price per share: {PricePerShare} | Total: {TotalValue} " +
                 $"| PnL: {RealizedPnL} | Time: {Time}";
         }
