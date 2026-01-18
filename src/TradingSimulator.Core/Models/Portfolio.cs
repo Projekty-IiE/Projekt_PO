@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using TradingSimulator.Core.Exceptions;
 using TradingSimulator.Core.Interfaces;
 
@@ -16,10 +17,13 @@ namespace TradingSimulator.Core.Models
         private readonly List<PortfolioItem> items;
 
         public decimal Balance => balance;
+        public decimal RealizedPnL { get; private set; }
         public IReadOnlyList<PortfolioItem> Items => items;
 
         public decimal TotalValue => balance + items.Sum(i => i.TotalValue);
-
+        
+        private readonly List<Transaction> _transactions = new List<Transaction>(); //to enable saving and loading to JSON
+        public IReadOnlyList<Transaction> Transactions => _transactions;
         public Portfolio(decimal initialBalance = 10000m)
         {
             if (initialBalance < 0)
@@ -45,11 +49,15 @@ namespace TradingSimulator.Core.Models
             UpdateCash(-totalCost);
             UpdateHoldings(stock, quantity);
 
-            return new BuyTransaction(
+            Transaction transact = new BuyTransaction(
                 stock.Symbol,
                 quantity,
-                stock.Price
-            );
+                stock.Price, 
+                DateTime.Now);
+
+            _transactions.Add(transact); //saving to history
+
+            return transact;
         }
 
         public Transaction SellStock(Stock stock, int quantity)
@@ -68,16 +76,23 @@ namespace TradingSimulator.Core.Models
             if (item.Quantity < quantity)
                 throw new InsufficientSharesException(quantity, item.Quantity);
 
+            decimal realizedPnL = (stock.Price - item.AveragePrice) * quantity;
             decimal totalValue = stock.Price * quantity;
+            RealizedPnL += realizedPnL;
 
             UpdateHoldings(stock, -quantity);
             UpdateCash(totalValue);
-
-            return new SellTransaction(
+            
+            Transaction transact = new SellTransaction(
                 stock.Symbol,
                 quantity,
-                stock.Price
-            );
+                stock.Price,
+                realizedPnL,
+                DateTime.Now);
+
+            _transactions.Add(transact);
+
+            return transact;
         }
 
         // ===== PRIVATE HELPERS =====
@@ -110,6 +125,22 @@ namespace TradingSimulator.Core.Models
 
                 if (item.Quantity == 0)
                     items.Remove(item);
+            }
+        }
+        public void LoadPortfolio(decimal newBalance, decimal newPnL,
+            IEnumerable<PortfolioItem> newItems, IEnumerable<Transaction> history)
+        {
+            balance = newBalance;
+            RealizedPnL = newPnL;
+            items.Clear();
+            if(newItems!=null)
+            {
+                items.AddRange(newItems);
+            }
+            _transactions.Clear();
+            if(history!=null)
+            {
+                _transactions.AddRange(history);
             }
         }
     }

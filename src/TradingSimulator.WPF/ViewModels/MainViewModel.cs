@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Threading;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
+using TradingSimulator.Core.Services;
 using TradingSimulator.WPF.Services;
 using TradingSimulator.WPF.Views;
 using LiveCharts;
@@ -20,6 +21,7 @@ namespace TradingSimulator.WPF.ViewModels
 
         private readonly IMarketService _marketService;
         private readonly IPortfolioService _portfolioService;
+        private readonly FileService _fileService = new FileService(); 
         private readonly SoundService _soundService = new();
         private DispatcherTimer _timer = null!;
         private TransactionHistoryWindow? _transactionHistoryWindow;
@@ -27,6 +29,7 @@ namespace TradingSimulator.WPF.ViewModels
         public ObservableCollection<PortfolioItem> PortfolioItems { get; } = new();
         public ObservableCollection<Transaction> Transactions { get; } = new();
         public ObservableCollection<Stock> AvailableStocks { get; } = new();
+        public IPortfolioService PortfolioService => _portfolioService; //so that MainWindow can see acc balance
 
         [ObservableProperty]
         private string[] _labels = Array.Empty<string>();
@@ -187,11 +190,6 @@ namespace TradingSimulator.WPF.ViewModels
 
                 _soundService.Play("trade_close.wav");
 
-                if (transaction.RealizedPnL.HasValue)
-                {
-                    TotalRealizedPnL += transaction.RealizedPnL.Value;
-                }
-
                 string pnlText = transaction.RealizedPnL >= 0 ? $"+{transaction.RealizedPnL:C}" : $"{transaction.RealizedPnL:C}";
                 TransactionMessage = $"SOLD! {transaction.Quantity} x {transaction.StockSymbol} (PnL: {pnlText})";
 
@@ -223,6 +221,7 @@ namespace TradingSimulator.WPF.ViewModels
 
             Balance = _portfolioService.Balance;
             TotalValue = _portfolioService.TotalValue;
+            TotalRealizedPnL = _portfolioService.RealizedPnL;
 
             PortfolioItems.Clear();
             foreach (var item in _portfolioService.Items)
@@ -265,6 +264,65 @@ namespace TradingSimulator.WPF.ViewModels
             Labels = Enumerable.Range(1, stock.PriceHistory.Count)
                                .Select(i => i.ToString())
                                .ToArray();
+        }
+
+        [RelayCommand]
+        private void SaveSession()
+        {
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                FileName="TradingSave",
+                DefaultExt=".json",
+                Filter="JSON documents (.json)|*.json"
+            };
+
+            if(dialog.ShowDialog()==true)
+            {
+                var state = new SessionState()
+                {
+                    Balance = _portfolioService.Balance,
+                    RealizedPnL=_portfolioService.RealizedPnL,
+                    Items = _portfolioService.Items.ToList(),
+                    Transactions = _portfolioService.Transactions.ToList(),
+                    MarketData=_portfolioService.AllStocks.ToList(),
+                };
+                _fileService.Save(dialog.FileName, state);
+                StatusMessage = "Session Saved Successfully!";
+            }
+        }
+        [RelayCommand]
+        private void LoadSession()
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                DefaultExt = ".json",
+                Filter = "JSON documents (.json)|*.json"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var state = _fileService.Load(dialog.FileName);
+
+                if (state != null)
+                {
+                    _portfolioService.LoadPortfolio(
+                        state.Balance, 
+                        state.RealizedPnL,
+                        state.Items ?? new List<PortfolioItem>(),
+                        state.Transactions ?? new List<Transaction>(),
+                        state.MarketData
+                        );
+
+                    RefreshData(); 
+                    Transactions.Clear();
+                    foreach (var t in _portfolioService.Transactions)
+                    {
+                        Transactions.Insert(0, t);
+                    }
+
+                    StatusMessage = "Session Loaded Successfully!";
+                }
+            }
         }
 
     }

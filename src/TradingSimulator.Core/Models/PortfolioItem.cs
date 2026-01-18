@@ -12,16 +12,17 @@ namespace TradingSimulator.Core.Models
     /// </summary>
     public class PortfolioItem
     {
-        public Stock Stock { get; }
+        public string Symbol { get; set; }
+        public Stock Stock { get; set; }
         public int Quantity { get; private set; }
         public decimal TotalValue => Stock.Price * Quantity;
-        public decimal AveragePrice { get; private set; }
+        public decimal AveragePrice { get; set; }
         public decimal UnrealizedPnL => TotalValue - (AveragePrice * Quantity);
 
         public PortfolioItem(Stock stock, int quantity, decimal purchasePrice)
         {
             Stock = stock ?? throw new ArgumentNullException(nameof(stock));
-
+            Symbol = stock.Symbol;
             if (quantity <= 0)
                 throw new ArgumentException("Quantity must be greater than 0");
 
