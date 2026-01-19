@@ -42,9 +42,9 @@ namespace TradingSimulator.Core.Models
 
             Symbol = symbol.ToUpper();
             Name = name;
-            PriceHistory = new ObservableCollection<decimal> { initialPrice };
-
+            PriceHistory = new ObservableCollection<decimal>();
             Price = initialPrice;
+
         }
 
         public void UpdatePrice(decimal percentageChange)
