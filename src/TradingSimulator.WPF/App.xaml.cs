@@ -9,6 +9,7 @@ using TradingSimulator.WPF.ViewModels;
 using TradingSimulator.WPF.Views;
 using System.Globalization;
 using System.Threading;
+using TradingSimulator.Core.Data;
 
 namespace TradingSimulator.WPF
 {
@@ -47,7 +48,7 @@ namespace TradingSimulator.WPF
                 };
                 return new MarketEngine(initialStocks);
             });
-
+            services.AddDbContext<TradingDbContext>();
             services.AddSingleton<Portfolio>(provider => new Portfolio(100000m));
             services.AddSingleton<IPortfolioService, PortfolioService>();
             services.AddSingleton<MainViewModel>();

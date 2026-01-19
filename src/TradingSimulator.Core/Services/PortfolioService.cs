@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using TradingSimulator.Core.Interfaces;
 using TradingSimulator.Core.Models;
-
+using TradingSimulator.Core.Data; 
 
 namespace TradingSimulator.Core.Services
 {
@@ -14,6 +14,8 @@ namespace TradingSimulator.Core.Services
     {
         private readonly Portfolio portfolio;
         private readonly IMarketService marketService;
+        private readonly TradingDbContext _dbContext; 
+
         public decimal Balance => portfolio.Balance;
         public decimal RealizedPnL => portfolio.RealizedPnL;
         public decimal TotalValue => portfolio.TotalValue;
@@ -23,23 +25,36 @@ namespace TradingSimulator.Core.Services
 
         public IReadOnlyList<Stock> AllStocks => marketService.Stocks;
 
-        public PortfolioService(Portfolio portfolio, IMarketService marketService)
+        public PortfolioService(Portfolio portfolio, IMarketService marketService, TradingDbContext dbContext)
         {
             this.portfolio = portfolio ?? throw new ArgumentNullException(nameof(portfolio));
             this.marketService = marketService ?? throw new ArgumentNullException(nameof(marketService));
+
+            _dbContext = dbContext; 
+            _dbContext.Database.EnsureCreated(); 
         }
 
         public Transaction Buy(string symbol, int quantity)
         {
             var stock = GetStock(symbol);
 
-            return portfolio.BuyStock(stock, quantity);
+            var transaction = portfolio.BuyStock(stock, quantity);
+
+            _dbContext.Transactions.Add(transaction);
+            _dbContext.SaveChanges();
+
+            return transaction;
         }
 
         public Transaction Sell(string symbol, int quantity)
         {
             var stock = GetStock(symbol);
-            return portfolio.SellStock(stock, quantity);
+
+            var transaction = portfolio.SellStock(stock, quantity);
+            _dbContext.Transactions.Add(transaction);
+            _dbContext.SaveChanges();
+
+            return transaction;
         }
 
         private Stock GetStock(string symbol)
@@ -58,7 +73,7 @@ namespace TradingSimulator.Core.Services
 
 
         public void LoadPortfolio(decimal balance, decimal realizedPnL,
-    List<PortfolioItem>? items, List<Transaction>? transactions, List<Stock>? marketData)
+            List<PortfolioItem>? items, List<Transaction>? transactions, List<Stock>? marketData)
         {
             if (marketData != null) //loading whole market
             {
@@ -97,6 +112,11 @@ namespace TradingSimulator.Core.Services
             }
 
             portfolio.LoadPortfolio(balance, realizedPnL, safeItems, transactions ?? new List<Transaction>());
+        }
+
+        public List<Transaction> GetTransactionHistoryFromDb()
+        {
+            return _dbContext.Transactions.OrderByDescending(t => t.Time).ToList();
         }
     }
 }

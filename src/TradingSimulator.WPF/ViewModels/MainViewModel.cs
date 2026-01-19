@@ -73,7 +73,22 @@ namespace TradingSimulator.WPF.ViewModels
             {
                 AvailableStocks.Add(stock);
             }
+            if (_portfolioService is PortfolioService concreteService)
+            {
+                try
+                {
+                    var historyFromDb = concreteService.GetTransactionHistoryFromDb();
 
+                    foreach (var tx in historyFromDb)
+                    {
+                        Transactions.Add(tx);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = "Błąd bazy danych: " + ex.Message;
+                }
+            }
             InitializeTimer();
             WarmUpMarket(20);
             SeedDemoData();
