@@ -259,6 +259,18 @@ namespace TradingSimulator.WPF.ViewModels
             UpdateChart(value.Stock);
         }
 
+        partial void OnSymbolInputChanged(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return;
+
+            var stock = AvailableStocks.FirstOrDefault(s => s.Symbol == value);
+            if (stock == null)
+                return;
+
+            UpdateChart(stock);
+        }
+
         private void UpdateChart(Stock? stock)
         {
             if (stock == null)
