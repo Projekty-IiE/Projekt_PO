@@ -29,7 +29,7 @@ namespace TradingSimulator.Tests.Services
             service = new PortfolioService(portfolio, market);
         }
 
-        // ===== CONSTRUCTOR =====
+        //CONSTRUCTOR
 
         [TestMethod]
         public void Constructor_Throws_WhenPortfolioIsNull()
@@ -45,7 +45,7 @@ namespace TradingSimulator.Tests.Services
                 new PortfolioService(portfolio, null));
         }
 
-        // ===== BUY =====
+        //BUY
 
         [TestMethod]
         public void Buy_DecreasesBalance_AndAddsItem()
@@ -79,7 +79,7 @@ namespace TradingSimulator.Tests.Services
                 service.Buy("TSLA", 100));
         }
 
-        // ===== SELL =====
+        //SELL
 
         [TestMethod]
         public void Sell_IncreasesBalance_AndUpdatesRealizedPnL()
@@ -102,7 +102,7 @@ namespace TradingSimulator.Tests.Services
                 service.Sell("AAPL", 1));
         }
 
-        // ===== TOTAL VALUE =====
+        //TOTAL VALUE
 
         [TestMethod]
         public void TotalValue_ReflectsCashAndMarketValue()
@@ -115,7 +115,7 @@ namespace TradingSimulator.Tests.Services
             Assert.AreEqual(10_500m, service.TotalValue);
         }
 
-        // ===== LOAD PORTFOLIO =====
+        //LOAD PORTFOLIO
 
         [TestMethod]
         public void LoadPortfolio_RestoresPortfolioAndMarketState()
