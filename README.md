@@ -2,34 +2,28 @@
 
 Mini Trading Simulator is a desktop application created as a university group project.  
 The application simulates a fictional stock market and allows users to trade stocks,
-manage a portfolio, and track profit and loss — all without using real market data
+manage a portfolio, and track profit and loss - all without using real market data
 or an internet connection.
 
 The main goal of the project is to demonstrate object-oriented programming,
 clean architecture, and GUI development using WPF.
   
-## Project Goals
+## Features
 
-- Simulate a simple stock market with randomly changing prices
-- Allow users to buy and sell stocks
-- Track portfolio value and profit/loss
-- Store transaction history using a local database
-- Apply clean architecture and separation of concerns
-  
+- Live market simulation
+- Portfolio management
+- Real-time balance and portfolio value
+- Unrealized PnL per position
+- Transaction history
+- Price chart
+- Database - stores all executed transactions
+- JSON save/load - full session persistence
+- Sound effects
+
 ## Project Structure
 
 The solution consists of **two main projects** located in a single repository:
 
-MiniTradingSimulator/  
-│  
-├── MiniTradingSimulator.sln  
-│  
-├── src/  
-│ ├── TradingSimulator.Core // Business logic + database (EF Core)  
-│ └── TradingSimulator.WPF // WPF user interface (MVVM)  
-│  
-└── README.md  
-  
 ### 🔹 TradingSimulator.Core
 - Domain models (Stock, Portfolio, Transaction)
 - Market simulation logic
@@ -42,25 +36,23 @@ MiniTradingSimulator/
 
 - WPF user interface
 - MVVM architecture
-- ViewModels and Commands
 - Data binding and validation
 - Communication with Core library
   
-## Architecture
-
-- **MVVM** pattern for WPF
-- **Separation of concerns** (logic vs UI)
-- **Code First** approach with Entity Framework Core
-- Repository pattern for data access
-  
 ## Technologies
 
-- C#
-- .NET
+- C# / .NET 8
 - WPF
-- Entity Framework Core
+- MVVM
+- CommunityToolkit.MVVM
+- LiveCharts
 - SQLite
-- Git & GitHub
+- JSON serialization
+
+## Dashboard Preview
+
+<img width="2879" height="1663" alt="image" src="https://github.com/user-attachments/assets/e854c533-4b8a-432d-a1ba-4f98efee0259" />
+
   
 ## How to Run
 
@@ -80,4 +72,3 @@ MiniTradingSimulator/
 
 - The application uses fictional data only
 - No real market data or internet connection is required
-- The database is generated automatically using EF Core migrations
