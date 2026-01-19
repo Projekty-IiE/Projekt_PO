@@ -19,7 +19,7 @@ namespace TradingSimulator.Tests.Models
 
             Assert.AreEqual("AAPL", stock.Symbol);
             Assert.AreEqual(150m, stock.Price);
-            Assert.AreEqual(1, stock.PriceHistory.Count); // ⚠️ konstruktor + setter
+            Assert.AreEqual(1, stock.PriceHistory.Count); // konstruktor + setter
         }
 
         [TestMethod]
