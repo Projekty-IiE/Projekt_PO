@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\TradingSimulator.Core\TradingSimulator.Core.csproj" />
+    <ProjectReference Include="..\TradingSimulator.Core\TradingSimulator.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
