@@ -16,9 +16,9 @@ clean architecture, and GUI development using WPF.
 - Unrealized PnL per position
 - Transaction history
 - Price chart
-- Database - stores all executed transactions
 - JSON save/load - full session persistence
 - Sound effects
+- Database - stores all executed transactions (Optional Feature kept on designated branch)
 
 ## Project Structure
 
@@ -28,8 +28,8 @@ The solution consists of **two main projects** located in a single repository:
 - Domain models (Stock, Portfolio, Transaction)
 - Market simulation logic
 - Portfolio management (buy/sell)
-- Entity Framework Core (Code First)
-- SQLite database
+- Entity Framework Core (Code First, Optional Feature)
+- SQLite database (Optional Feature)
 - No GUI or WPF dependencies
   
 ### 🔹 TradingSimulator.WPF
