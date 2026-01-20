@@ -61,9 +61,6 @@ namespace TradingSimulator.WPF.ViewModels
         [ObservableProperty]
         private int _quantityInput;
 
-        [ObservableProperty]
-        private PortfolioItem? _selectedPortfolioItem;
-
         public MainViewModel(IMarketService marketService, IPortfolioService portfolioService)
         {
             _marketService = marketService;
@@ -78,7 +75,7 @@ namespace TradingSimulator.WPF.ViewModels
             WarmUpMarket(20);
             SeedDemoData();
             RefreshData();
-            SelectedPortfolioItem = PortfolioItems.FirstOrDefault();
+            SymbolInput = "AAPL";
         }
 
         private void InitializeTimer()
@@ -113,7 +110,8 @@ namespace TradingSimulator.WPF.ViewModels
         private void NextTick()
         {
             _marketService.UpdateMarket();
-            UpdateChart(SelectedPortfolioItem?.Stock);
+            var stock = AvailableStocks.FirstOrDefault(s => s.Symbol == SymbolInput);
+            UpdateChart(stock);
             RefreshData();
         }
 
@@ -217,7 +215,6 @@ namespace TradingSimulator.WPF.ViewModels
         }
         private void RefreshData()
         {
-            var selectedSymbol = SelectedPortfolioItem?.Stock.Symbol;
 
             Balance = _portfolioService.Balance;
             TotalValue = _portfolioService.TotalValue;
@@ -229,19 +226,9 @@ namespace TradingSimulator.WPF.ViewModels
                 PortfolioItems.Add(item);
             }
 
-            SelectedPortfolioItem = PortfolioItems
-                .FirstOrDefault(p => p.Stock.Symbol == selectedSymbol);
-
             TotalUnrealizedPnL = PortfolioItems.Any()
                 ? PortfolioItems.Sum(i => i.UnrealizedPnL)
                 : 0;
-        }
-
-        partial void OnSelectedPortfolioItemChanged(PortfolioItem? value)
-        {
-            if (value?.Stock == null)
-                return;
-            UpdateChart(value.Stock);
         }
 
         partial void OnSymbolInputChanged(string value)
