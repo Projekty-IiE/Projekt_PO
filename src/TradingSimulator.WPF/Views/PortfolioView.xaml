@@ -91,7 +91,7 @@
                 <DataGridTextColumn Header="Name" Binding="{Binding Stock.Name}" Width="120" FontWeight="SemiBold"/>
                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="80"/>
                 <DataGridTextColumn Header="Current Price" Binding="{Binding Stock.Price, StringFormat=C2}" Width="100"/>
-                <DataGridTextColumn Header="Avg Buy Price" Binding="{Binding AveragePrice, StringFormat={}{0:C}}" Width="*" />
+                <DataGridTextColumn Header="Avg. Buy Price" Binding="{Binding AveragePrice, StringFormat={}{0:C}}" Width="*" />
                 <DataGridTextColumn Header="Profit/Loss" 
                                     Binding="{Binding UnrealizedPnL, StringFormat=C2}" 
                                     Width="100"
