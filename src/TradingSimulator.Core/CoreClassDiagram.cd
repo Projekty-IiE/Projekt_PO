@@ -17,17 +17,14 @@
   <Class Name="TradingSimulator.Core.Models.Transaction" Collapsed="true">
     <Position X="1.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AABCAAAAAAAICAAEAAAAAEAAgAAAAAAAAQAAgAAAAQA=</HashCode>
+      <HashCode>AABCAAAAAAAICAAEAAAAAEAAAAAAAAAAAQAAgAAAAQA=</HashCode>
       <FileName>Models\Transaction.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Stock" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="TradingSimulator.Core.Models.Portfolio">
     <Position X="0.5" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAAAAAAAAgCAAAAAgAAEAIAAQEAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>BACAAAAAAAAgCAAAAAgAAEIIAAQEAAAAAAAAAAACAAA=</HashCode>
       <FileName>Models\Portfolio.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
@@ -37,7 +34,7 @@
   <Class Name="TradingSimulator.Core.Models.PortfolioItem">
     <Position X="3" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIQAAAAAAAAAAAEAAAABEAAgAAAAACAAAAAgAAAAAA=</HashCode>
+      <HashCode>AAIQAAAAAAAAAAAEAAAABEAAgAAAAACAAAAAgAAACAA=</HashCode>
       <FileName>Models\PortfolioItem.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -45,14 +42,14 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="TradingSimulator.Core.Models.Stock">
-    <Position X="5.75" Y="0.5" Width="1.5" />
+    <Position X="5.75" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAABAAAAAQAAAAIEAAAAAAQAAABAAAAAAAABAAAACAA=</HashCode>
       <FileName>Models\Stock.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TradingSimulator.Core.Services.MarketEngine">
-    <Position X="8.5" Y="2" Width="1.5" />
+    <Position X="9.75" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAQAAIEAAAQAAAAAAAA=</HashCode>
       <FileName>Services\MarketEngine.cs</FileName>
@@ -63,14 +60,29 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="TradingSimulator.Core.Services.PortfolioService">
-    <Position X="10.25" Y="2" Width="1.5" />
+    <Position X="11.5" Y="2" Width="1.5" />
+    <AssociationLine Name="portfolio" Type="TradingSimulator.Core.Models.Portfolio" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12.25" Y="5.094" />
+        <Point X="12.25" Y="6.625" />
+        <Point X="2" Y="6.625" />
+      </Path>
+    </AssociationLine>
     <AssociationLine Name="marketService" Type="TradingSimulator.Core.Interfaces.IMarketService">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.151" Y="-0.618" />
       </MemberNameLabel>
     </AssociationLine>
+    <AssociationLine Name="Items" Type="TradingSimulator.Core.Models.PortfolioItem" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.844" Y="5.094" />
+        <Point X="11.844" Y="6.464" />
+        <Point X="3.75" Y="6.464" />
+        <Point X="3.75" Y="5.901" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAACAAAQAgAAEAACBAAAAAAQAAAAAAAAAA=</HashCode>
+      <HashCode>AAKAAAAAAAAACAAARAgAAEAACBAAAAAAQAAAAAACAAA=</HashCode>
       <FileName>Services\PortfolioService.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -82,17 +94,45 @@
     </ShowAsCollectionAssociation>
     <Lollipop Position="0.2" />
   </Class>
+  <Class Name="TradingSimulator.Core.Models.SessionState">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <AssociationLine Name="Items" Type="TradingSimulator.Core.Models.PortfolioItem" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.75" Y="1.32" />
+        <Point X="5.375" Y="1.32" />
+        <Point X="5.375" Y="2.75" />
+        <Point X="3.625" Y="2.75" />
+        <Point X="3.625" Y="3" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAACAAAAAgAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\SessionState.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="MarketData" />
+      <Property Name="Items" />
+      <Property Name="Transactions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="TradingSimulator.Core.Services.FileService">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\FileService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="TradingSimulator.Core.Interfaces.IMarketService" Collapsed="true">
-    <Position X="8.5" Y="0.5" Width="1.5" />
+    <Position X="9.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAAEAAAAAAAAAAAA=</HashCode>
       <FileName>Interfaces\IMarketService.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="TradingSimulator.Core.Interfaces.IPortfolioService" Collapsed="true">
-    <Position X="10.25" Y="0.5" Width="1.5" />
+    <Position X="11.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAAAAAAAACAAAQAgAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAKAAAAAAAAACAAARAgAAEAAAAAAAAAAAAAAAAACAAA=</HashCode>
       <FileName>Interfaces\IPortfolioService.cs</FileName>
     </TypeIdentifier>
   </Interface>
