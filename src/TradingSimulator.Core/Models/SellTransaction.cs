@@ -8,7 +8,7 @@ namespace TradingSimulator.Core.Models
 {
     /// <summary>
     /// Represents a SELL operation for a single stock.
-    /// Inherits from <see cref="Transaction"/> and provides realized P&L when available.
+    /// Inherits from <see cref="Transaction"/> and provides realized P&amp;L when available.
     /// </summary>
     public class SellTransaction : Transaction
     {

@@ -32,7 +32,7 @@ namespace TradingSimulator.Core.Models
 
         /// <summary>
         /// Cumulative realized profit and loss from closed trades.
-        /// Does not include unrealized P&L stored on individual <see cref="PortfolioItem"/> instances.
+        /// Does not include unrealized P&amp;L stored on individual <see cref="PortfolioItem"/> instances.
         /// </summary>
         public decimal RealizedPnL { get; set; }
 

@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +28,7 @@ namespace TradingSimulator.Core.Models
         public int Quantity { get; private set; }
 
         /// <summary>
-        /// Current total market value of this holding: <see cref="Stock.Price"/> * <see cref="Quantity"/>.
+        /// Current total market value of this holding: <c>Stock.Price * Quantity</c>.
         /// </summary>
         public decimal TotalValue => Stock.Price * Quantity;
 
