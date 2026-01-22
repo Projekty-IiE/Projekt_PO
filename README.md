@@ -72,3 +72,5 @@ The solution consists of **two main projects** located in a single repository:
 
 - The application uses fictional data only
 - No real market data or internet connection is required
+
+- Documentation can be found in designated branch
